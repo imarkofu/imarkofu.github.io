@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="ADDDATE(date ,INTERVAL expr type) ADDDATE(expr ,days)函数使用说明： 当被第二个参数的 INTERVAL 格式激活后， ADDDATE() 就是 DATE_ADD() 的同义词。相关函数 SUBDATE() 则是 DATE_SUB() 的同义词。对于 INTERVAL 参数上的信息 ，请参见关于 DATE_ADD() 的论述。 ADDTIME(e">
+<meta name="keywords" content="MySQL, 日期函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql 日期函数">
+<meta property="og:url" content="https://blog.imarkofu.com/2017/01/17/mysql-date-function/index.html">
+<meta property="og:site_name" content="imarkofu&#39;s blogs">
+<meta property="og:description" content="ADDDATE(date ,INTERVAL expr type) ADDDATE(expr ,days)函数使用说明： 当被第二个参数的 INTERVAL 格式激活后， ADDDATE() 就是 DATE_ADD() 的同义词。相关函数 SUBDATE() 则是 DATE_SUB() 的同义词。对于 INTERVAL 参数上的信息 ，请参见关于 DATE_ADD() 的论述。 ADDTIME(e">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-01-17T14:28:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mysql 日期函数">
+<meta name="twitter:description" content="ADDDATE(date ,INTERVAL expr type) ADDDATE(expr ,days)函数使用说明： 当被第二个参数的 INTERVAL 格式激活后， ADDDATE() 就是 DATE_ADD() 的同义词。相关函数 SUBDATE() 则是 DATE_SUB() 的同义词。对于 INTERVAL 参数上的信息 ，请参见关于 DATE_ADD() 的论述。 ADDTIME(e">
+
+
+
+
+
+
+  <link rel="canonical" href="https://blog.imarkofu.com/2017/01/17/mysql-date-function/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>mysql 日期函数 | imarkofu's blogs</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">imarkofu's blogs</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">the most important thing is endurance.</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/404/" rel="section"><i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>公益 404</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+    <div class="reading-progress-bar"></div>
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog.imarkofu.com/2017/01/17/mysql-date-function/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gallen">
+      <meta itemprop="description" content="一切都是最好的安排">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="imarkofu's blogs">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">mysql 日期函数
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-01-17 16:40:16 / 修改时间：22:28:26" itemprop="dateCreated datePublished" datetime="2017-01-17T16:40:16+08:00">2017-01-17</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/01/17/mysql-date-function/" class="leancloud_visitors" data-flag-title="mysql 日期函数">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>ADDDATE(date ,INTERVAL expr type) ADDDATE(expr ,days)</strong><br>函数使用说明： 当被第二个参数的 INTERVAL 格式激活后， ADDDATE() 就是 DATE_ADD() 的同义词。相关函数 SUBDATE() 则是 DATE_SUB() 的同义词。对于 INTERVAL 参数上的信息 ，请参见关于 DATE_ADD() 的论述。</p>
+<p><strong>ADDTIME(expr ,expr2)</strong><br>函数使用说明： ADDTIME() 将 expr2 添加至 expr 然后返回结果。 expr 是一个时间或时间日期表达式，而 expr2 是一个时间表达式。<br><a id="more"></a></p>
+<p><strong>CONVERT_TZ(dt ,from_tz ,to_tz)</strong><br>函数使用说明： CONVERT_TZ() 将时间日期值 dt 从 from_tz 给出的时区转到 to_tz 给出的时区，然后返回结果值。关于可能指定的时区的详细论述，若自变量无效，则这个函数会返回 NULL</p>
+<p><strong>CURDATE()</strong><br>函数使用说明：将当前日期按照 ‘YYYY-MM-DD’ 或 YYYYMMDD 格式的值返回，具体格式根据函数用在字符串或是数字语境中而定</p>
+<p><strong>CURRENT_DATE CURRENT_DATE()</strong><br>函数使用说明： CURRENT_DATE 和 CURRENT_DATE() 是的同义词</p>
+<p><strong>CURTIME()</strong><br>函数使用说明： 将当前时间以 ‘HH:MM:SS’ 或 HHMMSS 的格式返回， 具体格式根据函数用在字符串或是数字语境中而定。</p>
+<p><strong>CURRENT_TIME, CURRENT_TIME()</strong><br>函数使用说明： CURRENT_TIME 和 CURRENT_TIME() 是 CURTIME() 的同义词。</p>
+<p><strong>CURRENT_TIMESTAMP, CURRENT_TIMESTAMP()</strong><br>函数使用说明： CURRENT_TIMESTAMP 和 CURRENT_TIMESTAMP() 是 NOW() 的同义词</p>
+<p><strong>DATE(expr)</strong><br>函数使用说明： 提取日期或时间日期表达式 expr 中的日期部分。</p>
+<p><strong>DATEDIFF(expr ,expr2)</strong><br>函数使用说明： DATEDIFF() 返回起始时间 expr 和结束时间 expr2 之间的天数。 Expr 和 expr2 为日期或 date-and-time 表达式。计算中只用到这些值的日期部分。</p>
+<p><strong>DATE_ADD(date ,INTERVAL expr type) DATE_SUB(date ,INTERVAL expr type)</strong><br>函数使用说明：这些函数执行日期运算。 date 是一个 DATETIME 或 DATE 值，用来指定起始时间。 expr 是一个表达式，用来指定从起始日期添加或减去的时间间隔值。   Expr 是一个字符串 ; 对于负值的时间间隔，它可以以一个 ‘-’ 开头。 type 为关键词，它指示了表达式被解释的方式。</p>
+<p><strong>DATE_FORMAT(date ,format)</strong><br>函数使用说明：根据 format 字符串安排 date 值的格式。</p>
+<p><strong>DAY(date)</strong><br>函数使用说明： DAY() 和 DAYOFMONTH() 的意义相同</p>
+<p><strong>DAYNAME(date)</strong><br>函数使用说明：返回 date 对应的工作日名称。</p>
+<p><strong>DAYOFMONTH(date)</strong><br>函数使用说明：返回 date 对应的该月日期，范围是从 1 到 31</p>
+<p><strong>DAYOFWEEK(date)</strong><br>函数使用说明：返回 date (1 = 周日 , 2 = 周一 , …, 7 = 周六 ) 对应的工作日索引。这些索引值符合 ODBC 标准</p>
+<p><strong>DAYOFYEAR(date)</strong><br>函数使用说明：返回date 对应的一年中的天数，范围是从 1 到366 。</p>
+<p><strong>EXTRACT(type FROM date)</strong><br>函数使用说明： EXTRACT() 函数所使用的时间间隔类型说明符同 DATE_ADD() 或 DATE_SUB() 的相同 , 但它从日期中提取其部分，而不是执行日期运算。</p>
+<p><strong>FROM_DAYS(N)</strong><br>函数使用说明： 给定一个天数N , 返回一个 DATE 值。</p>
+<p><strong> FROM_UNIXTIME(unix_timestamp )ROM_UNIXTIME(unix_timestamp ,format)</strong><br>函数使用说明：返回’YYYY-MM-DD HH:MM:SS’ 或YYYYMMDDHHMMSS 格式值的unix_timestamp 参数表示，具体格式取决于该函数是否用在字符串中或是数字语境中。 若format 已经给出，则结果的格式是根据format 字符串而定。 format 可以包含同DATE_FORMAT() 函数输入项列表中相同的说明符。</p>
+<p><strong>GET_FORMAT(DATE|TIME|DATETIME, ‘EUR’|’USA’|’JIS’|’ISO’|’INTERNAL’)</strong><br>函数使用说明：返回一个格式字符串。这个函数在同 DATE_FORMAT() 及 STR_TO_DATE() 函数结合时很有用</p>
+<p><strong>HOUR(time)</strong><br>函数使用说明：返回 time 对应的小时数。对于日时值的返回值范围是从 0 到 23</p>
+<p><strong>LAST_DAY(date)</strong><br>函数使用说明：获取一个日期或日期时间值，返回该月最后一天对应的值。若参数无效，则返回 NULL 。</p>
+<p><strong>LOCALTIME, LOCALTIME()</strong><br>函数使用说明： LOCALTIME 及 LOCALTIME() 和 NOW() 具有相同意义。</p>
+<p><strong>LOCALTIMESTAMP, LOCALTIMESTAMP()</strong><br>函数使用说明： LOCALTIMESTAMP 和 LOCALTIMESTAMP() 和 NOW() 具有相同意义。</p>
+<p><strong>MAKEDATE(year ,dayofyear)</strong><br>函数使用说明：给出年份值和一年中的天数值，返回一个日期。 dayofyear 必须大于 0 ，否则结果为 NULL 。</p>
+<p><strong>MAKETIME(hour ,minute ,second)</strong><br>函数使用说明： 返回由 hour 、 minute 和 second 参数计算得出的时间值</p>
+<p><strong>CROSECOND(expr)</strong><br>函数使用说明：从时间或日期时间表达式 expr 返回微秒值，其数字范围从 0 到 999999 。</p>
+<p><strong>MINUTE(time)</strong><br>函数使用说明：返回 time 对应的分钟数 , 范围是从 0 到 59 。</p>
+<p><strong>MONTH(date)</strong><br>函数使用说明：返回 date 对应的月份，范围时从 1 到 12 。</p>
+<p><strong>MONTHNAME(date)</strong><br>函数使用说明： 返回 date 对应月份的全名</p>
+<p><strong>NOW()</strong><br>函数使用说明：返回当前日期和时间值，其格式为 ‘YYYY-MM-DD HH:MM:SS’ 或 YYYYMMDDHHMMSS ， 具体格式取决于该函数是否用在字符串中或数字语境中。</p>
+<p><strong>PERIOD_ADD(P ,N)</strong><br>函数使用说明：添加 N 个月至周期 P ( 格式为 YYMM 或 YYYYMM) ，返回值的格式为 YYYYMM 。注意周期参数 P 不是 日期值。</p>
+<p><strong>PERIOD_DIFF(P1 ,P2)</strong><br>函数使用说明：返回周期 P1 和 P2 之间的月份数。 P1 和 P2 的格式应该为 YYMM 或 YYYYMM 。注意周期参数 P1 和 P2 不是 日期值。</p>
+<p><strong>QUARTER(date)</strong><br>函数使用说明：返回 date 对应的一年中的季度值，范围是从 1 到 4</p>
+<p><strong>SECOND(time)</strong><br>函数使用说明：返回 time 对应的秒数 , 范围是从 0 到 59 。</p>
+<p><strong>SEC_TO_TIME(seconds)</strong><br>函数使用说明： 返回被转化为小时、 分钟和秒数的 seconds 参数值 , 其格式为 ‘HH:MM:SS’ 或 HHMMSS ，具体格式根据该函数是否用在字符串或数字语境中而定</p>
+<p><strong>STR_TO_DATE(str ,format)</strong><br>函数使用说明：这是 DATE_FORMAT() 函数的倒转。它获取一个字符串 str 和一个格式字符串 format 。若格式字符串包含日期和时间部分，则 STR_TO_DATE() 返回一个 DATETIME 值， 若该字符串只包含日期部分或时间部分，则返回一个 DATE 或 TIME 值。</p>
+<p><strong>SUBDATE(date ,INTERVAL expr type) SUBDATE(expr ,days)</strong><br>函数使用说明：当被第二个参数的 INTERVAL 型式调用时 , SUBDATE() 和 DATE_SUB() 的意义相同。对于有关 INTERVAL 参数的信息， 见有关 DATE_ADD() 的讨论。</p>
+<p><strong>SUBTIME(expr ,expr2)</strong><br>函数使用说明： SUBTIME() 从 expr 中提取 expr2 ，然后返回结果。 expr 是一个时间或日期时间表达式，而 xpr2 是一个时间表达式。</p>
+<p><strong>SYSDATE()</strong><br>函数使用说明：返回当前日期和时间值，格式为 ‘YYYY-MM-DD HH:MM:SS’ 或 YYYYMMDDHHMMSS ， 具体格式根据函数是否用在字符串或数字语境而定。</p>
+<p><strong>TIME(expr)</strong><br>函数使用说明：提取一个时间或日期时间表达式的时间部分，并将其以字符串形式返回。</p>
+<p><strong>TIMEDIFF(expr ,expr2)</strong><br>函数使用说明： TIMEDIFF() 返回起始时间 expr 和结束时间 expr2 之间的时间。 expr 和 expr2 为时间或 date-and-time 表达式 , 两个的类型必须一样。</p>
+<p><strong>TIMESTAMP(expr) , TIMESTAMP(expr ,expr2)</strong><br>函数使用说明： 对于一个单参数 , 该函数将日期或日期时间表达式 expr 作为日期时间值返回 . 对于两个参数 , 它将时间表达式 expr2 添加到日期或日期时间表达式 expr 中，将 theresult 作为日期时间值返回。</p>
+<p><strong>TIMESTAMPADD(interval ,int_expr ,datetime_expr)</strong><br>函数使用说明：将整型表达式int_expr 添加到日期或日期时间表达式 datetime_expr 中。 int_expr 的单位被时间间隔参数给定，该参数必须是以下值的其中一个： FRAC_SECOND 、SECOND 、 MINUTE 、 HOUR 、 DAY 、 WEEK 、 MONTH 、 QUARTER 或 YEAR 。可使用所显示的关键词指定Interval 值，或使用SQL_TSI_ 前缀。例如, DAY 或SQL_TSI_DAY 都是正确的</p>
+<p><strong>TIMESTAMPDIFF(interval ,datetime_expr1 ,datetime_expr2)</strong><br>函数使用说明：返回日期或日期时间表达式 datetime_expr1 和 datetime_expr2 the 之间的整数差。其结果的单位由 interval 参数给出。 interval 的法定值同 TIMESTAMPADD() 函数说明中所列出的相同。</p>
+<p><strong>TIME_FORMAT(time ,format)</strong><br>函数使用说明：其使用和 DATE_FORMAT() 函数相同 , 然而 format 字符串可能仅会包含处理小时、分钟和秒的格式说明符。其它说明符产生一个 NULL 值或 0 。</p>
+<p><strong>TIME_TO_SEC(time)</strong><br>函数使用说明：返回已转化为秒的 time 参数</p>
+<p><strong>TO_DAYS(date)</strong><br>函数使用说明：给定一个日期 date , 返回一个天数 ( 从年份 0 开始的天数 ) 。</p>
+<p><strong>UNIX_TIMESTAMP(), UNIX_TIMESTAMP(date)</strong><br>函数使用说明：若无参数调用，则返回一个 Unix timestamp (‘1970-01-01 00:00:00’ GMT 之后的秒数 ) 作为无符号整数。若用 date 来调用 UNIX_TIMESTAMP() ，它会将参数值以 ‘1970-01-01 00:00:00’ GMT 后的秒数的形式返回。 date 可以是一个 DATE 字符串、一个 DATETIME 字符串、一个 TIMESTAMP 或一个当地时间的 YYMMDD 或 YYYMMDD 格式的数字。</p>
+<p><strong>UTC_DATE, UTC_DATE()</strong><br>函数使用说明：返回当前 UTC 日期值，其格式为 ‘YYYY-MM-DD’ 或 YYYYMMDD ，具体格式取决于函数是否用在字符串或数字语境中。</p>
+<p><strong>UTC_TIME, UTC_TIME()</strong><br>函数使用说明：返回当前 UTC 值，其格式为   ‘HH:MM:SS’ 或 HHMMSS ，具体格式根据该函数是否用在字符串或数字语境而定。</p>
+<p><strong>UTC_TIMESTAMP, UTC_TIMESTAMP()</strong><br>函数使用说明：返回当前 UTC 日期及时间值，格式为 ‘YYYY-MM-DD HH:MM:SS’ 或 YYYYMMDDHHMMSS ，具体格式根据该函数是否用在字符串或数字语境而定</p>
+<p><strong>WEEK(date [,mode ])</strong><br>函数使用说明：该函数返回 date 对应的星期数。 WEEK() 的双参数形式允许你指定该星期是否起始于周日或周一， 以及返回值的范围是否为从 0 到 53 或从 1 到 53 。若 mode 参数被省略，则使用 default_week_format 系统自变量的值。</p>
+<p><strong>WEEKDAY(date)</strong><br>函数使用说明：返回 date (0 = 周一 , 1 = 周二 , … 6 = 周日 ) 对应的工作日索引   weekday index for</p>
+<p><strong>WEEKOFYEAR(date)</strong><br>函数使用说明：将该日期的阳历周以数字形式返回，范围是从 1 到 53 。它是一个兼容度函数，相当于 WEEK(date ,3) 。</p>
+<p><strong>YEAR(date)</strong><br>函数使用说明：返回 date 对应的年份 , 范围是从 1000 到 9999 。</p>
+<p><strong>YEARWEEK(date), YEARWEEK(date ,start)</strong><br>函数使用说明：返回一个日期对应的年或周。 start 参数的工作同 start 参数对 WEEK() 的工作相同。结果中的年份可以和该年的第一周和最后一周对应的日期参数有所不同。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+          
+            <a href="/tags/日期函数/" rel="tag"># 日期函数</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/17/mysql-mathematical-function/" rel="next" title="mysql 数学函数">
+                <i class="fa fa-chevron-left"></i> mysql 数学函数
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/17/mysql-full-text-search-function/" rel="prev" title="mysql 全文检索函数">
+                mysql 全文检索函数 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="Gallen">
+            
+              <p class="site-author-name" itemprop="name">Gallen</p>
+              <p class="site-description motion-element" itemprop="description">一切都是最好的安排</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">35</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">59</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">  <a href="http://www.miitbeian.gov.cn" rel="noopener" target="_blank">蜀ICP备17008398号 </a>&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gallen</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/reading_progress/reading_progress.js"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: 'cd378b07df77c5a75438',
+          clientSecret: '5bc6f831c17f66b0e224e5a5d3e0b4fef19a239b',
+          repo: 'imarkofu.github.io',
+          owner: 'gbwl_cgl@126.com',
+          admin: ['gbwl_cgl@126.com'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "f8naVQQv72FfbnP7uyuEVmiH-gzGzoHsz")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "f8naVQQv72FfbnP7uyuEVmiH-gzGzoHsz",
+                'X-LC-Key': "G98XlqTAzIaNVuwxvDhuxIP9",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

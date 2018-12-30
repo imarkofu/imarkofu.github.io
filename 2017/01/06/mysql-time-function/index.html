@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="DAYOFWEEK(date)返回日期date的星期索引(1=星期天，2=星期一, ……7=星期六)。这些索引值对应于ODBC标准。123456mysql&amp;gt; select DAYOFWEEK(&apos;2017-01-06&apos;);+-------------------------+| DAYOFWEEK(&apos;2017-01-06&apos;) |+-------------------------+|">
+<meta name="keywords" content="MySQL, 时间函数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql 时间函数">
+<meta property="og:url" content="https://blog.imarkofu.com/2017/01/06/mysql-time-function/index.html">
+<meta property="og:site_name" content="imarkofu&#39;s blogs">
+<meta property="og:description" content="DAYOFWEEK(date)返回日期date的星期索引(1=星期天，2=星期一, ……7=星期六)。这些索引值对应于ODBC标准。123456mysql&amp;gt; select DAYOFWEEK(&apos;2017-01-06&apos;);+-------------------------+| DAYOFWEEK(&apos;2017-01-06&apos;) |+-------------------------+|">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2017-01-06T06:27:30.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mysql 时间函数">
+<meta name="twitter:description" content="DAYOFWEEK(date)返回日期date的星期索引(1=星期天，2=星期一, ……7=星期六)。这些索引值对应于ODBC标准。123456mysql&amp;gt; select DAYOFWEEK(&apos;2017-01-06&apos;);+-------------------------+| DAYOFWEEK(&apos;2017-01-06&apos;) |+-------------------------+|">
+
+
+
+
+
+
+  <link rel="canonical" href="https://blog.imarkofu.com/2017/01/06/mysql-time-function/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>mysql 时间函数 | imarkofu's blogs</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">imarkofu's blogs</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">the most important thing is endurance.</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/404/" rel="section"><i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>公益 404</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+    <div class="reading-progress-bar"></div>
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog.imarkofu.com/2017/01/06/mysql-time-function/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gallen">
+      <meta itemprop="description" content="一切都是最好的安排">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="imarkofu's blogs">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">mysql 时间函数
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2017-01-06 12:54:48 / 修改时间：14:27:30" itemprop="dateCreated datePublished" datetime="2017-01-06T12:54:48+08:00">2017-01-06</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/MySQL/" itemprop="url" rel="index"><span itemprop="name">MySQL</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/01/06/mysql-time-function/" class="leancloud_visitors" data-flag-title="mysql 时间函数">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>DAYOFWEEK(date)</strong><br>返回日期date的星期索引(1=星期天，2=星期一, ……7=星期六)。这些索引值对应于ODBC标准。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select DAYOFWEEK('2017-01-06');</span><br><span class="line">+-------------------------+</span><br><span class="line">| DAYOFWEEK('2017-01-06') |</span><br><span class="line">+-------------------------+</span><br><span class="line">|                       6 |</span><br><span class="line">+-------------------------+</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p><strong>WEEKDAY(date)</strong><br>返回date的星期索引(0=星期一，1=星期二, ……6= 星期天)。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select WEEKDAY('2017-01-06');</span><br><span class="line">+-----------------------+</span><br><span class="line">| WEEKDAY('2017-01-06') |</span><br><span class="line">+-----------------------+</span><br><span class="line">|                     4 |</span><br><span class="line">+-----------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>DAYOFMONTH(date)</strong><br>返回date的月份中日期，在1到31范围内。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select DAYOFMONTH('2017-01-06');</span><br><span class="line">+--------------------------+</span><br><span class="line">| DAYOFMONTH('2017-01-06') |</span><br><span class="line">+--------------------------+</span><br><span class="line">|                        6 |</span><br><span class="line">+--------------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>DAYOFYEAR(date)</strong><br>返回date在一年中的日数, 在1到366范围内。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select DAYOFYEAR('2016-12-31');</span><br><span class="line">+-------------------------+</span><br><span class="line">| DAYOFYEAR('2016-12-31') |</span><br><span class="line">+-------------------------+</span><br><span class="line">|                     366 |</span><br><span class="line">+-------------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>MONTH(date)</strong><br>返回date的月份，范围1到12。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select MONTH('2017-01-06');</span><br><span class="line">+---------------------+</span><br><span class="line">| MONTH('2017-01-06') |</span><br><span class="line">+---------------------+</span><br><span class="line">|                   1 |</span><br><span class="line">+---------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>DAYNAME(date)</strong><br>返回date的星期名字。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select DAYNAME("2017-01-06");</span><br><span class="line">+-----------------------+</span><br><span class="line">| DAYNAME("2017-01-06") |</span><br><span class="line">+-----------------------+</span><br><span class="line">| Friday                |</span><br><span class="line">+-----------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>MONTHNAME(date)</strong><br>返回date的月份名字。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select MONTHNAME("2017-01-06");</span><br><span class="line">+-------------------------+</span><br><span class="line">| MONTHNAME("2017-01-06") |</span><br><span class="line">+-------------------------+</span><br><span class="line">| January                 |</span><br><span class="line">+-------------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>QUARTER(date)</strong><br>返回date一年中的季度，范围1到4。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select QUARTER('2016-12-31');</span><br><span class="line">+-----------------------+</span><br><span class="line">| QUARTER('2016-12-31') |</span><br><span class="line">+-----------------------+</span><br><span class="line">|                     4 |</span><br><span class="line">+-----------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>WEEK(date)、WEEK(date,first)</strong><br>对于星期天是一周的第一天的地方，有一个单个参数，返回date的周数，范围在0到52。2个参数形式WEEK()允许你指定星期是否开始于星期天或星期一。如果第二个参数是0，星期从星期天开始，如果第二个参数是1，从星期一开始。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select WEEK('2017-01-08');  </span><br><span class="line">+--------------------+</span><br><span class="line">| WEEK('2017-01-08') |</span><br><span class="line">+--------------------+</span><br><span class="line">|                  2 |</span><br><span class="line">+--------------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> select WEEK('2017-01-08',0);</span><br><span class="line">+----------------------+</span><br><span class="line">| WEEK('2017-01-08',0) |</span><br><span class="line">+----------------------+</span><br><span class="line">|                    2 |</span><br><span class="line">+----------------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> select WEEK('2017-01-08',1);</span><br><span class="line">+----------------------+</span><br><span class="line">| WEEK('2017-01-08',1) |</span><br><span class="line">+----------------------+</span><br><span class="line">|                    1 |</span><br><span class="line">+----------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>YEAR(date)</strong><br>返回date的年份，范围在1000到9999。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select YEAR('2017-01-06');</span><br><span class="line">+--------------------+</span><br><span class="line">| YEAR('2017-01-06') |</span><br><span class="line">+--------------------+</span><br><span class="line">|               2017 |</span><br><span class="line">+--------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>HOUR(time)</strong><br>返回time的小时，范围是0到23。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select HOUR('12:05:03');</span><br><span class="line">+------------------+</span><br><span class="line">| HOUR('12:05:03') |</span><br><span class="line">+------------------+</span><br><span class="line">|               12 |</span><br><span class="line">+------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>MINUTE(time)</strong><br>返回time的分钟，范围是0到59。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select MINUTE('2017-01-06 12:05:03');</span><br><span class="line">+-------------------------------+</span><br><span class="line">| MINUTE('2017-01-06 12:05:03') |</span><br><span class="line">+-------------------------------+</span><br><span class="line">|                             5 |</span><br><span class="line">+-------------------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>SECOND(time)</strong><br>回来time的秒数，范围是0到59。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select SECOND('12:05:03');</span><br><span class="line">+--------------------+</span><br><span class="line">| SECOND('12:05:03') |</span><br><span class="line">+--------------------+</span><br><span class="line">|                  3 |</span><br><span class="line">+--------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>PERIOD_ADD(P,N)</strong><br>增加N个月到阶段P（以格式YYMM或YYYYMM)。以格式YYYYMM返回值。注意阶段参数P不是日期值。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select PERIOD_ADD(201701,2); </span><br><span class="line">+----------------------+</span><br><span class="line">| PERIOD_ADD(201701,2) |</span><br><span class="line">+----------------------+</span><br><span class="line">|               201703 |</span><br><span class="line">+----------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>PERIOD_DIFF(P1,P2)</strong><br>返回在时期P1和P2之间月数，P1和P2应该以格式YYMM或YYYYMM。注意，时期参数P1和P2不是日期值。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select PERIOD_DIFF(1602,201701);</span><br><span class="line">+--------------------------+</span><br><span class="line">| PERIOD_DIFF(1602,201701) |</span><br><span class="line">+--------------------------+</span><br><span class="line">|                      -11 |</span><br><span class="line">+--------------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>DATE_ADD(date,INTERVAL expr type)、DATE_SUB(date,INTERVAL expr type)、ADDDATE(date,INTERVAL expr type)、SUBDATE(date,INTERVAL expr type)</strong><br>这些功能执行日期运算。对于MySQL 3.22，他们是新的。ADDDATE()和SUBDATE()是DATE_ADD()和DATE_SUB()的同义词。在MySQL 3.23中，你可以使用+和-而不是DATE_ADD()和DATE_SUB()。（见例子）date是一个指定开始日期的DATETIME或DATE值，expr是指定加到开始日期或从开始日期减去的间隔值一个表达式，expr是一个字符串；它可以以一个“-”开始表示负间隔。type是一个关键词，指明表达式应该如何被解释。EXTRACT(type FROM date)函数从日期中返回“type”间隔。下表显示了type和expr参数怎样被关联： type值 含义 期望的expr格式<br>SECOND 秒 SECONDS<br>MINUTE 分钟 MINUTES<br>HOUR 时间 HOURS<br>DAY 天 DAYS<br>MONTH 月 MONTHS<br>YEAR 年 YEARS<br>MINUTE_SECOND 分钟和秒 “MINUTES:SECONDS”<br>HOUR_MINUTE 小时和分钟 “HOURS:MINUTES”<br>DAY_HOUR 天和小时 “DAYS HOURS”<br>YEAR_MONTH 年和月 “YEARS-MONTHS”<br>HOUR_SECOND 小时, 分钟， “HOURS:MINUTES:SECONDS”<br>DAY_MINUTE 天, 小时, 分钟 “DAYS HOURS:MINUTES”<br>DAY_SECOND 天, 小时, 分钟, 秒 “DAYS HOURS:MINUTES:SECONDS”<br>MySQL在expr格式中允许任何标点分隔符。表示显示的是建议的分隔符。如果date参数是一个DATE值并且你的计算仅仅包含YEAR、MONTH和DAY部分(即，没有时间部分)，结果是一个DATE值。否则结果是一个DATETIME值。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> SELECT "2017-01-06 12:05:03" + INTERVAL 1 SECOND;                 </span><br><span class="line">+-------------------------------------------+</span><br><span class="line">| "2017-01-06 12:05:03" + INTERVAL 1 SECOND |</span><br><span class="line">+-------------------------------------------+</span><br><span class="line">| 2017-01-06 12:05:04                       |</span><br><span class="line">+-------------------------------------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> SELECT INTERVAL 1 DAY + "2017-01-06";</span><br><span class="line">+-------------------------------+</span><br><span class="line">| INTERVAL 1 DAY + "2017-01-06" |</span><br><span class="line">+-------------------------------+</span><br><span class="line">| 2017-01-07                    |</span><br><span class="line">+-------------------------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> SELECT "2017-01-06" - INTERVAL 1 SECOND;          </span><br><span class="line">+----------------------------------+</span><br><span class="line">| "2017-01-06" - INTERVAL 1 SECOND |</span><br><span class="line">+----------------------------------+</span><br><span class="line">| 2017-01-05 23:59:59              |</span><br><span class="line">+----------------------------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> SELECT DATE_ADD("2017-01-06 12:05:03", INTERVAL 1 SECOND);                   </span><br><span class="line">+----------------------------------------------------+</span><br><span class="line">| DATE_ADD("2017-01-06 12:05:03", INTERVAL 1 SECOND) |</span><br><span class="line">+----------------------------------------------------+</span><br><span class="line">| 2017-01-06 12:05:04                                |</span><br><span class="line">+----------------------------------------------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> SELECT DATE_ADD("2017-01-06 12:05:03", INTERVAL 1 DAY);                   </span><br><span class="line">+-------------------------------------------------+</span><br><span class="line">| DATE_ADD("2017-01-06 12:05:03", INTERVAL 1 DAY) |</span><br><span class="line">+-------------------------------------------------+</span><br><span class="line">| 2017-01-07 12:05:03                             |</span><br><span class="line">+-------------------------------------------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> SELECT DATE_ADD("2017-01-06 12:05:03", INTERVAL "1:1" MINUTE_SECOND);                   </span><br><span class="line">+---------------------------------------------------------------+</span><br><span class="line">| DATE_ADD("2017-01-06 12:05:03", INTERVAL "1:1" MINUTE_SECOND) |</span><br><span class="line">+---------------------------------------------------------------+</span><br><span class="line">| 2017-01-06 12:06:04                                           |</span><br><span class="line">+---------------------------------------------------------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> SELECT DATE_SUB("2017-01-06 12:05:03", INTERVAL "1 1:1:1" DAY_SECOND);                   </span><br><span class="line">+----------------------------------------------------------------+</span><br><span class="line">| DATE_SUB("2017-01-06 12:05:03", INTERVAL "1 1:1:1" DAY_SECOND) |</span><br><span class="line">+----------------------------------------------------------------+</span><br><span class="line">| 2017-01-05 11:04:02                                            |</span><br><span class="line">+----------------------------------------------------------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> SELECT DATE_ADD("2017-01-06 12:05:03", INTERVAL "-1 10" DAY_HOUR);                   </span><br><span class="line">+------------------------------------------------------------+</span><br><span class="line">| DATE_ADD("2017-01-06 12:05:03", INTERVAL "-1 10" DAY_HOUR) |</span><br><span class="line">+------------------------------------------------------------+</span><br><span class="line">| 2017-01-05 02:05:03                                        |</span><br><span class="line">+------------------------------------------------------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> SELECT DATE_SUB("2017-01-06", INTERVAL 31 DAY);          </span><br><span class="line">+-----------------------------------------+</span><br><span class="line">| DATE_SUB("2017-01-06", INTERVAL 31 DAY) |</span><br><span class="line">+-----------------------------------------+</span><br><span class="line">| 2016-12-06                              |</span><br><span class="line">+-----------------------------------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> SELECT EXTRACT(YEAR FROM "2017-01-06");</span><br><span class="line">+---------------------------------+</span><br><span class="line">| EXTRACT(YEAR FROM "2017-01-06") |</span><br><span class="line">+---------------------------------+</span><br><span class="line">|                            2017 |</span><br><span class="line">+---------------------------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> SELECT EXTRACT(YEAR_MONTH FROM "2017-01-06 12:05:03");</span><br><span class="line">+------------------------------------------------+</span><br><span class="line">| EXTRACT(YEAR_MONTH FROM "2017-01-06 12:05:03") |</span><br><span class="line">+------------------------------------------------+</span><br><span class="line">|                                         201701 |</span><br><span class="line">+------------------------------------------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> SELECT EXTRACT(DAY_MINUTE FROM "2017-01-06 12:05:03");</span><br><span class="line">+------------------------------------------------+</span><br><span class="line">| EXTRACT(DAY_MINUTE FROM "2017-01-06 12:05:03") |</span><br><span class="line">+------------------------------------------------+</span><br><span class="line">|                                          61205 |</span><br><span class="line">+------------------------------------------------+</span><br></pre></td></tr></table></figure></p>
+<p>如果你指定太短的间隔值(不包括type关键词期望的间隔部分)，MySQL假设你省掉了间隔值的最左面部分。例如，如果你指定一个type是DAY_SECOND，值expr被希望有天、小时、分钟和秒部分。如果你象”1:10”这样指定值，MySQL假设日子和小时部分是丢失的并且值代表分钟和秒。换句话说，”1:10” DAY_SECOND以它等价于”1:10” MINUTE_SECOND的方式解释，这对那MySQL解释TIME值表示经过的时间而非作为一天的时间的方式有二义性。如果你使用确实不正确的日期，结果是NULL。如果你增加MONTH、YEAR_MONTH或YEAR并且结果日期大于新月份的最大值天数，日子在新月用最大的天调整。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select DATE_ADD('2017-01-06', Interval 1 month);          </span><br><span class="line">+------------------------------------------+</span><br><span class="line">| DATE_ADD('2017-01-06', Interval 1 month) |</span><br><span class="line">+------------------------------------------+</span><br><span class="line">| 2017-02-06                               |</span><br><span class="line">+------------------------------------------+</span><br></pre></td></tr></table></figure></p>
+<p>注意，从前面的例子中词INTERVAL和type关键词不是区分大小写的。</p>
+<p><strong>TO_DAYS(date)</strong><br>给出一个日期date，返回一个天数(从0年的天数)。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select TO_DAYS(170106);</span><br><span class="line">+-----------------+</span><br><span class="line">| TO_DAYS(170106) |</span><br><span class="line">+-----------------+</span><br><span class="line">|          736700 |</span><br><span class="line">+-----------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> select TO_DAYS('2017-01-06');</span><br><span class="line">+-----------------------+</span><br><span class="line">| TO_DAYS('2017-01-06') |</span><br><span class="line">+-----------------------+</span><br><span class="line">|                736700 |</span><br><span class="line">+-----------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>FROM_DAYS(N)</strong><br>给出一个天数N，返回一个DATE值。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select FROM_DAYS(736700);</span><br><span class="line">+-------------------+</span><br><span class="line">| FROM_DAYS(736700) |</span><br><span class="line">+-------------------+</span><br><span class="line">| 2017-01-06        |</span><br><span class="line">+-------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>DATE_FORMAT(date,format)</strong><br>根据format字符串格式化date值。下列修饰符可以被用在format字符串中： %M 月名字(January……December)<br>%W 星期名字(Sunday……Saturday)<br>%D 有英语前缀的月份的日期(1st, 2nd, 3rd, 等等。）<br>%Y 年, 数字, 4 位<br>%y 年, 数字, 2 位<br>%a 缩写的星期名字(Sun……Sat)<br>%d 月份中的天数, 数字(00……31)<br>%e 月份中的天数, 数字(0……31)<br>%m 月, 数字(01……12)<br>%c 月, 数字(1……12)<br>%b 缩写的月份名字(Jan……Dec)<br>%j 一年中的天数(001……366)<br>%H 小时(00……23)<br>%k 小时(0……23)<br>%h 小时(01……12)<br>%I 小时(01……12)<br>%l 小时(1……12)<br>%i 分钟, 数字(00……59)<br>%r 时间,12 小时(hh:mm:ss [AP]M)<br>%T 时间,24 小时(hh:mm:ss)<br>%S 秒(00……59)<br>%s 秒(00……59)<br>%p AM或PM<br>%w 一个星期中的天数(0=Sunday ……6=Saturday ）<br>%U 星期(0……52), 这里星期天是星期的第一天<br>%u 星期(0……52), 这里星期一是星期的第一天<br>%% 一个文字“%”。 </p>
+<p>所有的其他字符不做解释被复制到结果中。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select DATE_FORMAT('2017-01-06 12:05:03', '%W %M %Y');                   </span><br><span class="line">+------------------------------------------------+</span><br><span class="line">| DATE_FORMAT('2017-01-06 12:05:03', '%W %M %Y') |</span><br><span class="line">+------------------------------------------------+</span><br><span class="line">| Friday January 2017                            |</span><br><span class="line">+------------------------------------------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> select DATE_FORMAT('2017-01-06 12:05:03', '%H:%i:%s');                   </span><br><span class="line">+------------------------------------------------+</span><br><span class="line">| DATE_FORMAT('2017-01-06 12:05:03', '%H:%i:%s') |</span><br><span class="line">+------------------------------------------------+</span><br><span class="line">| 12:05:03                                       |</span><br><span class="line">+------------------------------------------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> select DATE_FORMAT('2017-01-06 12:05:03', '%D %y %a %d %m %b %j');                   </span><br><span class="line">+------------------------------------------------------------+</span><br><span class="line">| DATE_FORMAT('2017-01-06 12:05:03', '%D %y %a %d %m %b %j') |</span><br><span class="line">+------------------------------------------------------------+</span><br><span class="line">| 6th 17 Fri 06 01 Jan 006                                   |</span><br><span class="line">+------------------------------------------------------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> select DATE_FORMAT('2017-01-06 12:05:03', '%H %k %I %r %T %S %w');                   </span><br><span class="line">+------------------------------------------------------------+</span><br><span class="line">| DATE_FORMAT('2017-01-06 12:05:03', '%H %k %I %r %T %S %w') |</span><br><span class="line">+------------------------------------------------------------+</span><br><span class="line">| 12 12 12 12:05:03 PM 12:05:03 03 5                         |</span><br><span class="line">+------------------------------------------------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>TIME_FORMAT(time,format)</strong><br>这象上面的DATE_FORMAT()函数一样使用，但是format字符串只能包含处理小时、分钟和秒的那些格式修饰符。其他修饰符产生一个NULL值或0。</p>
+<p><strong>CURDATE()、CURRENT_DATE</strong><br>以’YYYY-MM-DD’或YYYYMMDD格式返回今天日期值，取决于函数是在一个字符串还是数字上下文被使用。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select CURDATE();</span><br><span class="line">+------------+</span><br><span class="line">| CURDATE()  |</span><br><span class="line">+------------+</span><br><span class="line">| 2017-01-06 |</span><br><span class="line">+------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> select CURDATE()+2; </span><br><span class="line">+-------------+</span><br><span class="line">| CURDATE()+2 |</span><br><span class="line">+-------------+</span><br><span class="line">|    20170108 |</span><br><span class="line">+-------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>CURRENT_TIME</strong><br>以’HH:MM:SS’或HHMMSS格式返回当前时间值，取决于函数是在一个字符串还是在数字的上下文被使用。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select CURTIME();</span><br><span class="line">+-----------+</span><br><span class="line">| CURTIME() |</span><br><span class="line">+-----------+</span><br><span class="line">| 13:55:04  |</span><br><span class="line">+-----------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>NOW()、SYSDATE()、CURRENT_TIMESTAMP</strong><br>以’YYYY-MM-DD HH:MM:SS’或YYYYMMDDHHMMSS格式返回当前的日期和时间，取决于函数是在一个字符串还是在数字的上下文被使用。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select NOW();</span><br><span class="line">+---------------------+</span><br><span class="line">| NOW()               |</span><br><span class="line">+---------------------+</span><br><span class="line">| 2017-01-06 13:57:02 |</span><br><span class="line">+---------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>UNIX_TIMESTAMP()、UNIX_TIMESTAMP(date)</strong><br>如果没有参数调用，返回一个Unix时间戳记(从’1970-01-01 00:00:00’GMT开始的秒数)。如果UNIX_TIMESTAMP()用一个date参数被调用，它返回从’1970-01-01 00:00:00’ GMT开始的秒数值。date可以是一个DATE字符串、一个DATETIME字符串、一个TIMESTAMP或以YYMMDD或YYYYMMDD格式的本地时间的一个数字。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select UNIX_TIMESTAMP();</span><br><span class="line">+------------------+</span><br><span class="line">| UNIX_TIMESTAMP() |</span><br><span class="line">+------------------+</span><br><span class="line">|       1483682742 |</span><br><span class="line">+------------------+</span><br><span class="line"><span class="meta">mysql&gt;</span> select UNIX_TIMESTAMP('2017-01-06 12:05:03');</span><br><span class="line">+---------------------------------------+</span><br><span class="line">| UNIX_TIMESTAMP('2017-01-06 12:05:03') |</span><br><span class="line">+---------------------------------------+</span><br><span class="line">|                            1483675503 |</span><br><span class="line">+---------------------------------------+</span><br></pre></td></tr></table></figure></p>
+<p>当UNIX_TIMESTAMP被用于一个TIMESTAMP列，函数将直接接受值，没有隐含的“string-to-unix-timestamp”变换。</p>
+<p><strong>FROM_UNIXTIME(unix_timestamp)</strong><br>以’YYYY-MM-DD HH:MM:SS’或YYYYMMDDHHMMSS格式返回unix_timestamp参数所表示的值，取决于函数是在一个字符串还是或数字上下文中被使用。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select FROM_UNIXTIME(1483682742);</span><br><span class="line">+---------------------------+</span><br><span class="line">| FROM_UNIXTIME(1483682742) |</span><br><span class="line">+---------------------------+</span><br><span class="line">| 2017-01-06 14:05:42       |</span><br><span class="line">+---------------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>FROM_UNIXTIME(unix_timestamp,format)</strong><br>返回表示 Unix 时间标记的一个字符串，根据format字符串格式化。format可以包含与DATE_FORMAT()函数列出的条目同样的修饰符。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select FROM_UNIXTIME(UNIX_TIMESTAMP(), '%Y %D %M %h:%i:%s %x');</span><br><span class="line">+---------------------------------------------------------+</span><br><span class="line">| FROM_UNIXTIME(UNIX_TIMESTAMP(), '%Y %D %M %h:%i:%s %x') |</span><br><span class="line">+---------------------------------------------------------+</span><br><span class="line">| 2017 6th January 02:23:08 2017                          |</span><br><span class="line">+---------------------------------------------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>SEC_TO_TIME(seconds)</strong><br>返回seconds参数，变换成小时、分钟和秒，值以’HH:MM:SS’或HHMMSS格式化，取决于函数是在一个字符串还是在数字上下文中被使用。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select SEC_TO_TIME(2378);</span><br><span class="line">+-------------------+</span><br><span class="line">| SEC_TO_TIME(2378) |</span><br><span class="line">+-------------------+</span><br><span class="line">| 00:39:38          |</span><br><span class="line">+-------------------+</span><br></pre></td></tr></table></figure></p>
+<p><strong>TIME_TO_SEC(time)</strong><br>返回time参数，转换成秒。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">mysql&gt;</span> select TIME_TO_SEC('14:05:42');         </span><br><span class="line">+-------------------------+</span><br><span class="line">| TIME_TO_SEC('14:05:42') |</span><br><span class="line">+-------------------------+</span><br><span class="line">|                   50742 |</span><br><span class="line">+-------------------------+</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+          
+            <a href="/tags/时间函数/" rel="tag"># 时间函数</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/29/mysql-function/" rel="next" title="mysql字符函数详解">
+                <i class="fa fa-chevron-left"></i> mysql字符函数详解
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/17/mysql-control-flow-function/" rel="prev" title="mysql 控制流程函数">
+                mysql 控制流程函数 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <div class="site-overview-wrap sidebar-panel sidebar-panel-active">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="Gallen">
+            
+              <p class="site-author-name" itemprop="name">Gallen</p>
+              <p class="site-description motion-element" itemprop="description">一切都是最好的安排</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">35</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">59</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">  <a href="http://www.miitbeian.gov.cn" rel="noopener" target="_blank">蜀ICP备17008398号 </a>&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gallen</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/reading_progress/reading_progress.js"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: 'cd378b07df77c5a75438',
+          clientSecret: '5bc6f831c17f66b0e224e5a5d3e0b4fef19a239b',
+          repo: 'imarkofu.github.io',
+          owner: 'gbwl_cgl@126.com',
+          admin: ['gbwl_cgl@126.com'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "f8naVQQv72FfbnP7uyuEVmiH-gzGzoHsz")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "f8naVQQv72FfbnP7uyuEVmiH-gzGzoHsz",
+                'X-LC-Key': "G98XlqTAzIaNVuwxvDhuxIP9",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

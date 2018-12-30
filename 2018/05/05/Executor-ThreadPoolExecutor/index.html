@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2">
+
+<link rel="stylesheet" href="/css/main.css?v=6.6.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.6.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.6.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.6.0" color="#222">
+
+
+
+
+
+
+
+<script id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.6.0',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="在开发服务端软件项目时，经常需要处理时间很短而数目却非常巨大的请求，如果为每一个请求创建一个新的线程，会导致性能上的瓶颈，因为线程对象的创建和销毁需要JVM频繁的处理，如果执行时间很短，可能花在创建和销毁线程对象上的时间将大于真正执行任务的时间，若这样，系统性能将大大降低。因此JDK5起提供了线程池的支持，主要作用则时支持高并发的访问处理，并且可以将线程对象进行复用。">
+<meta name="keywords" content="Java, Executor, ThreadPoolExecutor, 线程池">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Executor与ThreadPoolExecutor的使用">
+<meta property="og:url" content="https://blog.imarkofu.com/2018/05/05/Executor-ThreadPoolExecutor/index.html">
+<meta property="og:site_name" content="imarkofu&#39;s blogs">
+<meta property="og:description" content="在开发服务端软件项目时，经常需要处理时间很短而数目却非常巨大的请求，如果为每一个请求创建一个新的线程，会导致性能上的瓶颈，因为线程对象的创建和销毁需要JVM频繁的处理，如果执行时间很短，可能花在创建和销毁线程对象上的时间将大于真正执行任务的时间，若这样，系统性能将大大降低。因此JDK5起提供了线程池的支持，主要作用则时支持高并发的访问处理，并且可以将线程对象进行复用。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-05-05T14:33:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Executor与ThreadPoolExecutor的使用">
+<meta name="twitter:description" content="在开发服务端软件项目时，经常需要处理时间很短而数目却非常巨大的请求，如果为每一个请求创建一个新的线程，会导致性能上的瓶颈，因为线程对象的创建和销毁需要JVM频繁的处理，如果执行时间很短，可能花在创建和销毁线程对象上的时间将大于真正执行任务的时间，若这样，系统性能将大大降低。因此JDK5起提供了线程池的支持，主要作用则时支持高并发的访问处理，并且可以将线程对象进行复用。">
+
+
+
+
+
+
+  <link rel="canonical" href="https://blog.imarkofu.com/2018/05/05/Executor-ThreadPoolExecutor/">
+
+
+
+<script id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>Executor与ThreadPoolExecutor的使用 | imarkofu's blogs</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .motion-element,
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-title { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">imarkofu's blogs</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">the most important thing is endurance.</p>
+      
+    
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>首页</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-about">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>关于</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-tags">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>标签</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/categories/" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>分类</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>归档</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-sitemap">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/sitemap.xml" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>站点地图</a>
+
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-commonweal">
+
+    
+    
+    
+      
+    
+
+    
+
+    <a href="/404/" rel="section"><i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br>公益 404</a>
+
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+    <div class="reading-progress-bar"></div>
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog.imarkofu.com/2018/05/05/Executor-ThreadPoolExecutor/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Gallen">
+      <meta itemprop="description" content="一切都是最好的安排">
+      <meta itemprop="image" content="/images/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="imarkofu's blogs">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Executor与ThreadPoolExecutor的使用
+
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-05-05 21:30:11 / 修改时间：22:33:07" itemprop="dateCreated datePublished" datetime="2018-05-05T21:30:11+08:00">2018-05-05</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing"><a href="/categories/Java编程/" itemprop="url" rel="index"><span itemprop="name">Java编程</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/05/05/Executor-ThreadPoolExecutor/" class="leancloud_visitors" data-flag-title="Executor与ThreadPoolExecutor的使用">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数：</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在开发服务端软件项目时，经常需要处理时间很短而数目却非常巨大的请求，如果为每一个请求创建一个新的线程，会导致性能上的瓶颈，因为线程对象的创建和销毁需要JVM频繁的处理，如果执行时间很短，可能花在创建和销毁线程对象上的时间将大于真正执行任务的时间，若这样，系统性能将大大降低。<br>因此JDK5起提供了线程池的支持，主要作用则时支持高并发的访问处理，并且可以将线程对象进行复用。<br><a id="more"></a></p>
+<h1 id="Executors"><a href="#Executors" class="headerlink" title="Executors"></a>Executors</h1><p>Exwcutor仅仅时一种规范，是一种声明和定义，并没有实现任何的功能，所以需要使用接口的实现类来完成指定的功能，比如ThreadPoolExecutor。ThreadPoolExecutor使用上并不是很方便，实例化时需要传入很多个参数，还要考虑线程并发数等与线程运行效率相关的参数，所以官方建议使用Executors工厂类来创建线程池对象。</p>
+<h2 id="newCachedThreadPool"><a href="#newCachedThreadPool" class="headerlink" title="newCachedThreadPool()"></a>newCachedThreadPool()</h2><p>创建无界线程池，可以进行线程自动回收<br>所谓“无界”就是指理论上的Integer.MAX_VALUE<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="title">newCachedThreadPool</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">0</span>, Integer.MAX_VALUE, <span class="number">60L</span>, TimeUnit.SECONDS, <span class="keyword">new</span> SynchronousQueue&lt;Runnable&gt;());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="newCachedThreadPool-ThreadFactory-threadFactory"><a href="#newCachedThreadPool-ThreadFactory-threadFactory" class="headerlink" title="newCachedThreadPool(ThreadFactory threadFactory)"></a>newCachedThreadPool(ThreadFactory threadFactory)</h2><p>可通过ThreadFactory定制无界线程池中的线程对象<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyThreadFactory</span> <span class="keyword">implements</span> <span class="title">ThreadFactory</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Thread <span class="title">newThread</span><span class="params">(Runnable r)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Thread(r, <span class="string">"定制线程对象-"</span> + ++ i);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="newFixedThreadPool-int-nThreads"><a href="#newFixedThreadPool-int-nThreads" class="headerlink" title="newFixedThreadPool(int nThreads)"></a>newFixedThreadPool(int nThreads)</h2><p>创建有界线程池，也就是线程池中的线程数可以指定最大值<br> <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> ThreadPoolExecutor(nThreads, nThreads, <span class="number">0L</span>, TimeUnit.MILLISECONDS, <span class="keyword">new</span> LinkedBlockingQueue&lt;Runnable&gt;());</span><br></pre></td></tr></table></figure></p>
+<h2 id="newFixedThreadPool-int-nThreads-ThreadFactory-threadFactory"><a href="#newFixedThreadPool-int-nThreads-ThreadFactory-threadFactory" class="headerlink" title="newFixedThreadPool(int nThreads, ThreadFactory threadFactory)"></a>newFixedThreadPool(int nThreads, ThreadFactory threadFactory)</h2><p>增加定制线程功能的有界线程池</p>
+<h2 id="newSingleThreadExecutor"><a href="#newSingleThreadExecutor" class="headerlink" title="newSingleThreadExecutor()"></a>newSingleThreadExecutor()</h2><p>单一线程的线程池，实现队列的方式来执行任务<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> ThreadPoolExecutor(<span class="number">1</span>, <span class="number">1</span>, <span class="number">0L</span>, TimeUnit.MILLISECONDS, <span class="keyword">new</span> LinkedBlockingQueue&lt;Runnable&gt;());</span><br></pre></td></tr></table></figure></p>
+<h2 id="newSingleThreadExecutor-ThreadFactory-threadFactory"><a href="#newSingleThreadExecutor-ThreadFactory-threadFactory" class="headerlink" title="newSingleThreadExecutor(ThreadFactory threadFactory)"></a>newSingleThreadExecutor(ThreadFactory threadFactory)</h2><p>定制线程功能的单一线程池</p>
+<h1 id="ThreadPoolExecutor的使用"><a href="#ThreadPoolExecutor的使用" class="headerlink" title="ThreadPoolExecutor的使用"></a>ThreadPoolExecutor的使用</h1><p>常用构造方法<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ThreadPoolExecutor(<span class="keyword">int</span> corePoolSize, <span class="keyword">int</span> maximumPoolSize, <span class="keyword">long</span> keepAliveTime, TimeUnit unit, BlockingQueue&lt;Runnable&gt; workQueue)</span><br><span class="line">corePoolSize：池中保存的线程数，包括空闲线程数</span><br><span class="line">maximumPoolSize：池中允许的最大线程数</span><br><span class="line">keepAliveTime：线程数数量大于corePoolSize时，在没有超过指定时间内时不会从线程池中将空闲线程删除，超过此时间单位，则删除</span><br><span class="line">unit：keepAliveTime的时间单位</span><br><span class="line">workQueue：执行前用于保存任务的队列。此队列仅保持由execute方法提交的Runnable任务</span><br></pre></td></tr></table></figure></p>
+<p>示例注释：<br>A：execute提交的Runnable任务数量<br>B：核心线程数corePoolSize<br>C：最大线程数maximumPoolSize<br>D：A-B（假设A&gt;=B）<br>E：new LinkedBlockingDeque<runnable>();队列，无构造参数<br>F：new SynchronousQueue<runnable>();队列<br>G：keepAliveTime<br>注：这里E和F时两种类型的队列，指定线程池仅可选择一种</runnable></runnable></p>
+<p>1、如果A&lt;=B，那么马上创建线程运行这个任务，并不放入扩展队列Queue中，其他参数功能忽略<br>2、如果A&gt;B &amp;&amp; A&lt;=C&amp;&amp;E，那么C和G参数忽略，并把D放入E中等待被执行<br>3、如果A&gt;B &amp;&amp; A&lt;=C&amp;&amp;F，那么C和G参数有效，并马上创建线程运行这些任务，而不把D放入F中，D执行完成后在执行时间后放生超时将D进行清除<br>4、如果A&gt;B &amp;&amp; A&gt;C&amp;&amp;E，那么C和G参数忽略，并把D放入E中等待被执行<br>5、如果A&gt;B &amp;&amp; A&gt;C&amp;&amp;F，那么处理C的任务，其他任务则不再处理抛出异常</p>
+<p>ThreadPoolExecutor常见的队列<br>A：ArrayBlockingQueue<br>B：LinkedBlockingDeque<br>C：SynchronousQueue<br>A和B可指定队列存储元素的多少，C是为同步队列，不存储元素</p>
+<p>ThreadPoolExecutor拒绝策略<br>AbortPolicy：当任务添加到线程池中被拒绝时，它将抛出RejectedExecutionException异常<br>CallerRunsPolicy：当任务添加到线程池中被拒绝时，会使用调用线程池的Thread对象来处理该被决绝的任务<br>// 也就是说谁发起来这个任务，谁就要负责该任务的执行<br>DiscardOldestPolicy：当任务添加到线程池被拒绝时，线程池会放弃等待队列中最旧的未处理的任务，然后将被拒绝的任务添加到等待队列中<br>DiscardPolicy：当任务添加到线程池中被拒绝时，线程池将丢弃被拒绝的任务</p>
+<p>注：线程池ThreadPoolExecutor的执行等待队列中的任务是安顺序去除，执行却是乱序的</p>
+<p>参数说明<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">getCorePoolSize()获取核心线程数</span><br><span class="line">getMaximunPoolSize()获取最大线程数</span><br><span class="line">getPoolSize()当前池中线程数</span><br><span class="line">getQueue().size()当前等待执行的线程数</span><br><span class="line">getActiveCount()当前有多少个线程正在执行任务</span><br><span class="line">getCompletedTaskCount()获取已经执行完成的任务数</span><br><span class="line">getTaskCount()获取有多少个任务发送给了线程池</span><br><span class="line">shutdown()当前未执行完的线程继续执行，而不再添加新的任务；方法不会阻塞</span><br><span class="line">shutdownNow()中断所有的任务Task</span><br><span class="line"><span class="comment">// 并且抛出InterruptedException异常</span></span><br><span class="line"><span class="comment">// 前提时Runnable中使用if (Thread.currentThread().isInterrupted() == true)语句来判断当前线程的中断状态</span></span><br><span class="line"><span class="comment">// 而在队列中等待执行的线程不再执行，也就是从等待队列中清除</span></span><br><span class="line"><span class="comment">// 如果线程中没有if (Thread.currentThread().isInterrupted() == true)语句及抛出异常的代码，正在执行的线程会正常执行完毕</span></span><br><span class="line"><span class="comment">// 该方法还会返回被清除的线程列表</span></span><br><span class="line">isShutdown()判断线程池是否已经关闭</span><br><span class="line">isTerminating()可以理解为线程池是否正在关闭</span><br><span class="line"><span class="comment">// 当调用shutdown()或shutdownNow()之后处于正在终止但尚未完全终止的过程中时，该方法返回true</span></span><br><span class="line">isTerminated()线程池是否已经关闭</span><br><span class="line">awaitTermination(<span class="keyword">long</span> timeout, TimeUnit unit)等待指定时间内，返回线程池是否已经终止工作，</span><br><span class="line">setRejectedExecutionHandler(RejectedExecutionHandler handler)设置任务被拒绝执行时的策略</span><br><span class="line">allowCoreThreadTimeOut(<span class="keyword">boolean</span> value)设置核心线程数是否也有超时效果</span><br><span class="line">prestartCoreThread()每调用一次就创建一个核心线程，返回是否创建成功</span><br><span class="line">prestartAllCoreThreads()启用全部核心线程，返回实际启动的核心线程数量</span><br><span class="line"><span class="comment">// 线程池可重写以下两个方法对线程池中执行的线程对象实现监控</span></span><br><span class="line">beforeExecute(Thread t, Runnable r)任务执行前</span><br><span class="line">afterExecute(Runnable r, Throwable t)任务执行完成后</span><br><span class="line">remove(Runnable task)删除尚未被执行的Runnable任务</span><br><span class="line"><span class="comment">// 但是这个方法需要注意的是，如果通过execute()方法进行提交的任务，且在等待队列中时，才可被删除</span></span><br><span class="line"><span class="comment">// 如果时通过submit()方法提交的任务，且在等待队列中时，不能被删除【原因时submit方法对任务进行了包装】</span></span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+      
+    
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"># Java</a>
+          
+            <a href="/tags/线程池/" rel="tag"># 线程池</a>
+          
+            <a href="/tags/Executor/" rel="tag"># Executor</a>
+          
+            <a href="/tags/ThreadPoolExecutor/" rel="tag"># ThreadPoolExecutor</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/05/03/Phaser/" rel="next" title="Phaser的使用">
+                <i class="fa fa-chevron-left"></i> Phaser的使用
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/05/07/Future-And-Callable/" rel="prev" title="Future和Callable的使用">
+                Future和Callable的使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+  </div>
+
+
+          </div>
+          
+
+  
+    <div id="gitalk-container">
+    </div>
+    
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.png" alt="Gallen">
+            
+              <p class="site-author-name" itemprop="name">Gallen</p>
+              <p class="site-description motion-element" itemprop="description">一切都是最好的安排</p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">35</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">7</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  <a href="/tags/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">59</span>
+                    <span class="site-state-item-name">标签</span>
+                  </a>
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </div>
+
+      
+      <!--noindex-->
+        <div class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Executors"><span class="nav-number">1.</span> <span class="nav-text">Executors</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#newCachedThreadPool"><span class="nav-number">1.1.</span> <span class="nav-text">newCachedThreadPool()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#newCachedThreadPool-ThreadFactory-threadFactory"><span class="nav-number">1.2.</span> <span class="nav-text">newCachedThreadPool(ThreadFactory threadFactory)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#newFixedThreadPool-int-nThreads"><span class="nav-number">1.3.</span> <span class="nav-text">newFixedThreadPool(int nThreads)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#newFixedThreadPool-int-nThreads-ThreadFactory-threadFactory"><span class="nav-number">1.4.</span> <span class="nav-text">newFixedThreadPool(int nThreads, ThreadFactory threadFactory)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#newSingleThreadExecutor"><span class="nav-number">1.5.</span> <span class="nav-text">newSingleThreadExecutor()</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#newSingleThreadExecutor-ThreadFactory-threadFactory"><span class="nav-number">1.6.</span> <span class="nav-text">newSingleThreadExecutor(ThreadFactory threadFactory)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ThreadPoolExecutor的使用"><span class="nav-number">2.</span> <span class="nav-text">ThreadPoolExecutor的使用</span></a></li></ol></div>
+            
+
+          </div>
+        </div>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">  <a href="http://www.miitbeian.gov.cn" rel="noopener" target="_blank">蜀ICP备17008398号 </a>&copy; 2017 – <span itemprop="copyrightYear">2018</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Gallen</span>
+
+  
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a href="https://hexo.io" class="theme-link" rel="noopener" target="_blank">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 – <a href="https://theme-next.org" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+    
+
+    
+  </div>
+
+  
+
+<script>
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script src="/lib/reading_progress/reading_progress.js"></script>
+
+
+  
+
+
+  <script src="/js/src/utils.js?v=6.6.0"></script>
+
+  <script src="/js/src/motion.js?v=6.6.0"></script>
+
+
+
+  
+  
+
+
+  <script src="/js/src/affix.js?v=6.6.0"></script>
+
+  <script src="/js/src/schemes/pisces.js?v=6.6.0"></script>
+
+
+
+  
+  <script src="/js/src/scrollspy.js?v=6.6.0"></script>
+<script src="/js/src/post-details.js?v=6.6.0"></script>
+
+
+
+  
+
+
+  <script src="/js/src/bootstrap.js?v=6.6.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
+
+  
+  
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+
+  
+  
+  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
+
+   <script>
+        var gitalk = new Gitalk({
+          clientID: 'cd378b07df77c5a75438',
+          clientSecret: '5bc6f831c17f66b0e224e5a5d3e0b4fef19a239b',
+          repo: 'imarkofu.github.io',
+          owner: 'gbwl_cgl@126.com',
+          admin: ['gbwl_cgl@126.com'],
+          id: md5(location.pathname),
+          distractionFreeMode: 'true'
+        })
+        gitalk.render('gitalk-container')
+       </script>
+
+
+  
+
+
+
+
+
+  
+
+  
+  <script>
+    
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+
+      Counter('get', '/classes/Counter', { where: JSON.stringify({ url }) })
+        .done(function ({ results }) {
+          if (results.length > 0) {
+            var counter = results[0];
+            
+            Counter('put', `/classes/Counter/${counter.objectId}`, JSON.stringify({ time: { "__op":"Increment", "amount":1 } }))
+            
+            .done(function () {
+                  var $element = $(document.getElementById(url));
+                  $element.find('.leancloud-visitors-count').text(counter.time + 1);
+            })
+            
+            .fail(function ({ responseJSON }) {
+                console.log('Failed to save Visitor num, with error message: ' + responseJSON.error);
+            })
+          } else {
+            
+              var $element = $(document.getElementById(url));
+              $element.find('.leancloud-visitors-count').text('Counter not initialized! See more at console err msg.');
+              console.error('ATTENTION! LeanCloud counter has security bug, see here how to solve it: https://github.com/theme-next/hexo-leancloud-counter-security. \n But you also can use LeanCloud without security, by set \'security\' option to \'false\'.');
+            
+          }
+        })
+      .fail(function ({ responseJSON }) {
+        console.log('LeanCloud Counter Error:' + responseJSON.code + " " + responseJSON.error);
+      });
+    }
+    
+
+    $(function() {
+      $.get('https://app-router.leancloud.cn/2/route?appId=' + "f8naVQQv72FfbnP7uyuEVmiH-gzGzoHsz")
+        .done(function ({ api_server }) {
+          var Counter = function (method, url, data) {
+            return $.ajax({
+              method: method,
+              url: `https://${api_server}/1.1${url}`,
+              headers: {
+                'X-LC-Id': "f8naVQQv72FfbnP7uyuEVmiH-gzGzoHsz",
+                'X-LC-Key': "G98XlqTAzIaNVuwxvDhuxIP9",
+                'Content-Type': 'application/json',
+              },
+              data: data,
+            });
+          };
+          
+          addCount(Counter);
+          
+        })
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+  
+  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
+  <script>pangu.spacingPage();</script>
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
