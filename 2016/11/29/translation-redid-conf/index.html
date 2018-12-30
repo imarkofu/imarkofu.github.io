@@ -467,6 +467,16 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/11/29/translation-redid-conf/#comments" itemprop="discussionUrl">
+                  <span class="post-meta-item-text">评论数：</span> <span class="post-comments-count gitment-comments-count" data-xid="/2016/11/29/translation-redid-conf/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -576,9 +586,12 @@
           
 
   
-    <div id="gitalk-container">
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
     </div>
-    
+
   
 
 
@@ -960,35 +973,46 @@
 
 
 
-
-
-
-
+<!-- LOCAL: You can save these files to your site and update links -->
+  
+    
+    <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+    <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+  
+<!-- END LOCAL -->
 
   
-  
-  <script src="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.min.js"></script>
 
   
-  
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1.4.0/dist/gitalk.css">
+    <script>
+    function renderGitment(){
+      var gitment = new Gitmint({
+        id: window.location.pathname,
+        owner: 'gbwl_cgl@126.com',
+        repo: 'imarkofu.github.io',
+        
+        lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+        
+        oauth: {
+        
+        
+          client_secret: '5bc6f831c17f66b0e224e5a5d3e0b4fef19a239b',
+        
+          client_id: 'cd378b07df77c5a75438'
+        }});
+      gitment.render('gitment-container');
+    }
 
+    
+      renderGitment();
+    
+    </script>
   
-  
-  <script src="//cdn.jsdelivr.net/npm/js-md5@0.7.3/src/md5.min.js"></script>
 
-   <script>
-        var gitalk = new Gitalk({
-          clientID: 'cd378b07df77c5a75438',
-          clientSecret: '5bc6f831c17f66b0e224e5a5d3e0b4fef19a239b',
-          repo: 'blog.imarkofu.com',
-          owner: 'gbwl_cgl@126.com',
-          admin: ['gbwl_cgl@126.com'],
-          id: md5(location.pathname),
-          distractionFreeMode: 'true'
-        })
-        gitalk.render('gitalk-container')
-       </script>
+
+
+
+
 
 
   
