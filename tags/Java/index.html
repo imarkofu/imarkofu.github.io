@@ -1269,11 +1269,6 @@
   
 
   
-  
-  
-  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
-  <script>pangu.spacingPage();</script>
-
 
   
 
@@ -1371,7 +1366,9 @@
 
 </body>
 </html>
-     searchResultList += result.item;
+ist = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
               })
               searchResultList += "</ul>";
               resultContent.innerHTML = searchResultList;
@@ -1509,11 +1506,6 @@
   
 
   
-  
-  
-  <script src="/lib/pangu/dist/pangu.min.js?v=3.3"></script>
-  <script>pangu.spacingPage();</script>
-
 
   
 
