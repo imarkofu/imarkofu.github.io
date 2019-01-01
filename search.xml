@@ -15,6 +15,20 @@
       </tags>
   </entry>
   <entry>
+    <title><![CDATA[算法学习-堆栈和队列]]></title>
+    <url>%2F2019%2F01%2F01%2Falgorithm-stack-and-queue%2F</url>
+    <content type="text"><![CDATA[栈和队列都是动态集合，可以理解为线性表或线性表实现的数据结构。它可以由数组实现，也可以由链表实现。和数组链表等不一样的是，栈、队列添加、删除数据的位置都是预先设定的。在栈中，被删除的是最近被插入的元素，栈实现的是一种先进后出的策略。而队列中，被删去的总是在集合中存在时间最长的元素，队列实现的是一种先进先出的策略。栈和队列是非常有用的数据结构，在计算机中很多的地方使用了栈、队列的思想。函数执行的压栈及出栈，消息队列的使用等等。本文最后将介绍栈和队列的常见使用场景，递归转化。 堆栈一种特殊的线性表，其只允许在固定的一端进行插入和删除元素操作。进行数据插入和删除操作的一端称为栈顶，另一端称为栈底。不含任何元素的栈称为空栈，栈又称为后进先出的线性表。 队列只允许在一端进行插入数据操作，在另一端进行删除操作的特殊线性表。插入的叫队尾，删除的叫队头，对列具有先进先出的特性。 时间复杂度对比参考：http://www.bigocheatsheet.com/]]></content>
+      <categories>
+        <category>Algorithm</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>数据结构</tag>
+        <tag>堆栈</tag>
+        <tag>队列</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[ExecutorService接口的使用]]></title>
     <url>%2F2018%2F05%2F07%2FExecutorService%2F</url>
     <content type="text"><![CDATA[ExecutorService中有很多工具方法，在前面的文章中提过一些，这里将对剩余方法的功能进行介绍。invokeyAny()和invokeAll()具有阻塞特性 invokeAny(Collection&lt;? extends Callable&gt; tasks)取得第一个完成任务的结果值，当第一个任务执行完成后，会调用interrupt()方法将其他任务中断，所以在这些任务中可以结果if(Thread.currentThread().isInterrupted()==true)代码来决定任务是否继续1、其他线程无if(Thread.currentThread().isInterrupted()==true)代码，已经获得第一个运行的结果值后，其他线程继续运行2、其他线程有if(Thread.currentThread().isInterrupted()==true)代码，已经获得第一个运行的结果值后，其他线程用throw new InterruptedException()代码则这些线程中断，虽然throw 抛出了异常。但在主线程中并不能捕获到异常，如果想捕获异常，则需要在Callable中使用try-catch显示进行捕获。 如果invokeyAny()执行慢的任务发生异常，默认情况下在主线程中捕获不到异常信息，只能在当前任务中显示的使用try-catch进行捕获如果invokeyAny()执行快的任务发生异常，默认情况下在主线程中捕获不到异常信息，除非在当前任务中显示的使用try-catch进行捕获，该方法还会等待执行慢的任务返回结果值。【先出现异常而不影响后面的任务取值的原理在源码中一直判断没有正确的返回值，如果直到最后都没有获得返回值则抛出ExecutionException，这个异常的内容是最后出现的异常。比如A、B、C这三个任务一起被执行，都出现了异常，则最终的异常就是在最后出现的异常】 invokeAny(Collection&lt;? extends Callable&gt; tasks, long timeout, TimeUnit unit)指定时间内取得第一个先执行完任务的结果值在出现超时异常时，可以将if(Thread.currentThread().isInterrupted()==true)判断和throw new InterruptedException()结合以使线程中断执行 invokeAll(Collection&lt;? extends Callable&gt; tasks)等待全部线程执行完毕后，取得全部完成任务的结果值。如果有任务执行时异常，则在对应的get()方法时抛出 invokeAll(Collection&lt;? extends Callable&gt; tasks, long timeout, TimeUnit unit)如果全部任务在指定时间内没有完成，则出现异常(CancallationException)如果正常执行完成的任务，可以通过对应的get()方法获取到返回值，没有在指定时间内执行完的任务则抛出CancallationException异常。]]></content>
