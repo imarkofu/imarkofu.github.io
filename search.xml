@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[算法学习-优先队列]]></title>
+    <url>%2F2019%2F01%2F01%2Falgorithm-priority-queue%2F</url>
+    <content type="text"><![CDATA[普通的队列是一种先进先出的数据结构，元素在队列尾追加，而从队列头删除。在优先队列中，元素被赋予优先级。当访问元素时，具有最高优先级的元素最先删除。优先队列具有最高级先出 （largest-in，first-out）的行为特征。 实现机制 Heap(Binary, Binomial, Fibonacci) Binary Search Tree 各种堆的时间复杂堆参考：https://en.wikipedia.org/wiki/Heap_(data_structure)]]></content>
+      <categories>
+        <category>Algorithm</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>数据结构</tag>
+        <tag>优先队列</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[算法学习-堆栈和队列]]></title>
     <url>%2F2019%2F01%2F01%2Falgorithm-stack-and-queue%2F</url>
     <content type="text"><![CDATA[栈和队列都是动态集合，可以理解为线性表或线性表实现的数据结构。它可以由数组实现，也可以由链表实现。和数组链表等不一样的是，栈、队列添加、删除数据的位置都是预先设定的。在栈中，被删除的是最近被插入的元素，栈实现的是一种先进后出的策略。而队列中，被删去的总是在集合中存在时间最长的元素，队列实现的是一种先进先出的策略。栈和队列是非常有用的数据结构，在计算机中很多的地方使用了栈、队列的思想。函数执行的压栈及出栈，消息队列的使用等等。本文最后将介绍栈和队列的常见使用场景，递归转化。 堆栈一种特殊的线性表，其只允许在固定的一端进行插入和删除元素操作。进行数据插入和删除操作的一端称为栈顶，另一端称为栈底。不含任何元素的栈称为空栈，栈又称为后进先出的线性表。 队列只允许在一端进行插入数据操作，在另一端进行删除操作的特殊线性表。插入的叫队尾，删除的叫队头，对列具有先进先出的特性。 时间复杂度对比参考：http://www.bigocheatsheet.com/]]></content>
