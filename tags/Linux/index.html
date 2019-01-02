@@ -100,7 +100,7 @@
 <meta name="keywords" content="imarkofu">
 <meta property="og:type" content="website">
 <meta property="og:title" content="imarkofu&#39;s blogs">
-<meta property="og:url" content="https://blog.imarkofu.com/tags/Linux/index.html">
+<meta property="og:url" content="https://blog.imarkofu.com/tags/linux/index.html">
 <meta property="og:site_name" content="imarkofu&#39;s blogs">
 <meta property="og:description" content="一切都是最好的安排">
 <meta property="og:locale" content="zh-CN">
@@ -113,7 +113,7 @@
 
 
 
-  <link rel="canonical" href="https://blog.imarkofu.com/tags/Linux/">
+  <link rel="canonical" href="https://blog.imarkofu.com/tags/linux/">
 
 
 
@@ -123,7 +123,7 @@
   };
 </script>
 
-  <title>标签: Linux | imarkofu's blogs</title>
+  <title>标签: linux | imarkofu's blogs</title>
   
 
 
@@ -427,7 +427,7 @@
 
     <div id="posts" class="posts-collapse">
       <div class="collection-title">
-        <h1>Linux<small>标签</small>
+        <h1>linux<small>标签</small>
         </h1>
       </div>
 
@@ -439,17 +439,69 @@
 
       <h2 class="post-title">
         
-          <a class="post-title-link" href="/2016/11/30/centos-safety-reinforcement-and-performance-optimization/" itemprop="url">
+          <a class="post-title-link" href="/2016/12/29/linux-date-command/" itemprop="url">
             
-              <span itemprop="name">CentOS 6.5安全加固及性能优化</span>
+              <span itemprop="name">linux date命令</span>
             
           </a>
         
       </h2>
 
       <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2016-11-30T21:36:22+08:00" content="2016-11-30">
-          11-30
+        <time class="post-time" itemprop="dateCreated" datetime="2016-12-29T14:19:07+08:00" content="2016-12-29">
+          12-29
+        </time>
+      </div>
+
+    </header>
+  </article>
+
+
+      
+        
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h2 class="post-title">
+        
+          <a class="post-title-link" href="/2016/12/01/svn-backup/" itemprop="url">
+            
+              <span itemprop="name">SVN备份方案</span>
+            
+          </a>
+        
+      </h2>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated" datetime="2016-12-01T15:07:43+08:00" content="2016-12-01">
+          12-01
+        </time>
+      </div>
+
+    </header>
+  </article>
+
+
+      
+        
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h2 class="post-title">
+        
+          <a class="post-title-link" href="/2016/11/29/curl-command-usage-guide/" itemprop="url">
+            
+              <span itemprop="name">curl命令使用指南</span>
+            
+          </a>
+        
+      </h2>
+
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated" datetime="2016-11-29T17:07:52+08:00" content="2016-11-29">
+          11-29
         </time>
       </div>
 
@@ -729,7 +781,7 @@
 
     <footer id="footer" class="footer">
       <div class="footer-inner">
-        <div class="copyright">  <a href="http://www.miitbeian.gov.cn" rel="noopener" target="_blank">蜀ICP备17008398号 </a>&copy; 2017 – <span itemprop="copyrightYear">2019</span>
+        <div class="copyright">  <a href="http://www.miitbeian.gov.cn" rel="noopener" target="_blank">蜀ICP备17008398号 </a>&copy; 2016 – <span itemprop="copyrightYear">2019</span>
   <span class="with-love" id="animate">
     <i class="fa fa-user"></i>
   </span>
@@ -1336,51 +1388,6 @@
         var code = $(this).parent().find('.code').find('.line').map(function (i, e) {
           return $(e).text();
         }).toArray().join('\n');
-        var ta = document.createElement('textarea');
-        var range = document.createRange(); //For Chrome
-        var sel = window.getSelection(); //For Chrome
-        var yPosition = window.pageYOffset || document.documentElement.scrollTop;
-        ta.style.top = yPosition + 'px'; //Prevent page scroll
-        ta.style.position = 'absolute';
-        ta.style.opacity = '0';
-        ta.value = code;
-        ta.textContent = code; //For FireFox
-        ta.contentEditable = true;
-        ta.readOnly = false;
-        document.body.appendChild(ta);
-        range.selectNode(ta);
-        sel.removeAllRanges();
-        sel.addRange(range);
-        ta.setSelectionRange(0, code.length);
-        var result = document.execCommand('copy');
-        
-          if (result) $(this).text('复制成功');
-          else $(this).text('复制失败');
-        
-        ta.blur(); //For iOS
-        $(this).blur();
-      })).on('mouseleave', function (e) {
-        var $b = $(this).find('.copy-btn');
-        setTimeout(function () {
-          $b.text('复制');
-        }, 300);
-      }).append(e);
-    })
-  </script>
-
-
-  
-  
-
-  
-  
-
-  
-
-
-</body>
-</html>
- }).toArray().join('\n');
         var ta = document.createElement('textarea');
         var range = document.createRange(); //For Chrome
         var sel = window.getSelection(); //For Chrome
