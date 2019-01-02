@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://blog.imarkofu.com/2019/01/02/algorithm-hash-table/</loc>
+    <lastmod>2019-01-02T14:13:17.811Z</lastmod>
+  </url>  <url>
     <loc>https://blog.imarkofu.com/2019/01/01/algorithm-priority-queue/</loc>
     <lastmod>2019-01-01T16:08:46.461Z</lastmod>
   </url>  <url>
