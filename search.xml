@@ -1,6 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title><![CDATA[CentOS6编译安装Python3.7]]></title>
+    <url>%2F2019%2F04%2F03%2FCentOS-install-python3%2F</url>
+    <content type="text"><![CDATA[准备编译环境1yum install zlib-devel bzip2-devel openssl-devel ncurses-devel xz gcc-c++ gcc libffi-devel -y 下载并解压12wget https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tar.xztar xf Python-3.7.3.tar.xz -C /usr/local/src/ 编译安装123456789101112131415161718192021222324cd /usr/local/src/Python-3.7.3./configure --prefix=/usr/local/python3 --with-ssl --enable-optimizationsmake -j 4 &amp;&amp; make install最终提示如下，表示pip-9.0.1与setuptools-28.8.0同时安装成功if test "x" != "x" ; then \ rm -f /usr/local/python3/bin/python3-32; \ (cd /usr/local/python3/bin; ln -s python3.7-32 python3-32) \ firm -f /usr/local/python3/share/man/man1/python3.1(cd /usr/local/python3/share/man/man1; ln -s python3.7.1 python3.1)if test "xupgrade" != "xno" ; then \ case upgrade in \ upgrade) ensurepip="--upgrade" ;; \ install|*) ensurepip="" ;; \ esac; \ ./python -E -m ensurepip \ $ensurepip --root=/ ; \ fiLooking in links: /tmp/tmpnffpnbr9Collecting setuptoolsCollecting pipInstalling collected packages: setuptools, pipSuccessfully installed pip-19.0.3 setuptools-40.8.0 建立软连接12ln -s /usr/local/python3/bin/python3.7 /usr/local/bin/python3 ln -s /usr/local/python3/bin/pip3 /usr/local/bin/pip3 升级到最新的pip1pip3 install --upgrade pip 修改默认的Python12345mv /usr/bin/python /usr/bin/python_bakln -s /usr/local/python3/bin/python3.7 /usr/bin/python# 验证python -V]]></content>
+      <categories>
+        <category>Python</category>
+      </categories>
+      <tags>
+        <tag>编译安装Python</tag>
+        <tag>Python安装</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[ekho中文TTS CentOS6编译安装]]></title>
+    <url>%2F2019%2F04%2F02%2FCentOS-ekho-TTS%2F</url>
+    <content type="text"><![CDATA[Ekho（余音）是一个免费、开源的中文语音合成软件。它目前支持粤语、普通话（国语）、广东台山话、诏安客语、藏语、雅言（中国古代通用语）和韩语（试验中），英语则通过eSpeak或Festival间接实现。Ekho支持Linux、Windows和Android平台。 源码下载页面：ekho.项目主页：ekho 编译安装基于CentOS 6.10 12345678910111213141516171819202122232425262728# 添加 SCL 和 EPEL 软件仓库yum install centos-release-scl epel-release# 安装 GCC 5 和编译 ekho 的开发库yum install devtoolset-6-gcc* libsndfile-devel.x86_64 pulseaudio-libs-devel.x86_64 ncurses-devel.x86_64 espeak-devel.x86_64 lame-devel.x86_64# 使用 SCL 启动 shell scl enable devtoolset-6 bash# 验证 GCC 版本 # which gcc# gcc --version# [可选] 设置 GCC 编译器选项export CFLAGS='-O2 -g -pipe -Wall -fexceptions -fno-strict-aliasing -fstack-protector -m64 -mtune=generic -fPIC'# 生成 MakeFile，编译，安装 ./configure --prefix=/opt/app/ekho &amp;&amp; make -j 8 &amp;&amp; make install# 设置 ekho 相关环境变量 cat &gt; /etc/profile.d/ekho_env.sh &lt;&lt; EOF#!/bin/bashexport PATH=\$&#123;PATH&#125;:/opt/app/ekho/binexport EKHO_DATA_PATH=/opt/app/ekho/share/ekho-data/EOF# 退出 SCL shell exit 更换音频文件参考：怎样替换Ekho的语音文件制作和添加新的语音声音参考：如何为Ekho添加新的声音]]></content>
+      <categories>
+        <category>TTS</category>
+      </categories>
+      <tags>
+        <tag>TTS</tag>
+        <tag>中文TTS</tag>
+        <tag>ekho</tag>
+        <tag>ekho编译安装</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[算法学习-动态规划]]></title>
+    <url>%2F2019%2F01%2F14%2Falgorithm-dynamic-programming%2F</url>
+    <content type="text"><![CDATA[动态规划（英语：Dynamic programming，简称DP）是一种在数学、管理科学、计算机科学、经济学和生物信息学中使用的，通过把原问题分解为相对简单的子问题的方式求解复杂问题的方法。 动态规划常常适用于有重叠子问题和最优子结构性质的问题，动态规划方法所耗时间往往远少于朴素解法。 动态规划背后的基本思想非常简单。大致上，若要解一个给定问题，我们需要解其不同部分（即子问题），再根据子问题的解以得出原问题的解。 通常许多子问题非常相似，为此动态规划法试图仅仅解决每个子问题一次，从而减少计算量：一旦某个给定子问题的解已经算出，则将其记忆化存储，以便下次需要同一个子问题解之时直接查表。这种做法在重复子问题的数目关于输入的规模呈指数增长时特别有用。 适用情况最优子结构性质。如果问题的最优解所包含的子问题的解也是最优的，我们就称该问题具有最优子结构性质（即满足最优化原理）。最优子结构性质为动态规划算法解决问题提供了重要线索。 无后效性。即子问题的解一旦确定，就不再改变，不受在这之后、包含它的更大的问题的求解决策影响。**子问题重叠性质。子问题重叠性质是指在用递归算法自顶向下对问题进行求解时，每次产生的子问题并不总是新问题，有些子问题会被重复计算多次。动态规划算法正是利用了这种子问题的重叠性质，对每一个子问题只计算一次，然后将其计算结果保存在一个表格中，当再次需要计算已经计算过的子问题时，只是在表格中简单地查看一下结果，从而获得较高的效率。 实例求解的关键：第一步找到问题的“状态”， 第二步找到“状态转移方程” 示例一一个序列有N个数：A[1],A[2],…,A[N]，求出最长上升子序列的长度。 (讲DP基本都会讲到的一个问题LIS：longest increasing subsequence) 示例：5，3，4，8，6，7前1个数的LIS长度d(1)=1(序列：5) 前2个数的LIS长度d(2)=1(序列：3；3前面没有比3小的)前3个数的LIS长度d(3)=2(序列：3，4；4前面有个比它小的3，所以d(3)=d(2)+1) 前4个数的LIS长度d(4)=3(序列：3，4，8；8前面比它小的有3个数，所以 d(4)=max{d(1),d(2),d(3)}+1=3) 状态转移方程dp[i]=max{dp[j]}+1，j=[0,i-1]且a[j]&lt;a[i]即为：到第i个元素的最长上升子序列=第0到i-1的元素的最长上升子序列+1时间复杂度=O(n^2) 这个问题还有另一种更优化的解法，时间复杂度为O(nlog(n))参考：https://leetcode.com/problems/longest-increasing-subsequence/ 示例二平面上有N*M个格子，每个格子中放着一定数量的苹果。你从左上角的格子开始走到右下角， 每一步只能向下走或是向右走，每次走到一个格子上就把格子里的苹果收集起来， 这样下去，你最多能收集到多少个苹果。 这个状态转移方程应该会更好理解dp[i][j]=A[i][j]+max(dp[i+1][j], dp[i][j+1])，当然这里没有将边界问题考虑进来，实际编程中需要注意。 即为：从第i,j位置到走到左下角能收集的最大苹果数量=当前格子内苹果数量+向右走或向下走的两种方式的最大值]]></content>
+      <categories>
+        <category>Algorithm</category>
+      </categories>
+      <tags>
+        <tag>算法</tag>
+        <tag>数据结构</tag>
+        <tag>动态规划</tag>
+      </tags>
+  </entry>
+  <entry>
     <title><![CDATA[算法学习-贪心算法]]></title>
     <url>%2F2019%2F01%2F03%2Falgorithm-greedy-algorithm%2F</url>
     <content type="text"><![CDATA[所谓贪心算法是指，在对问题求解时，总是做出在当前看来是最好的选择。也就是说，不从整体最优上加以考虑，他所做出的仅是在某种意义上的局部最优解。 贪心算法没有固定的算法框架，算法设计的关键是贪心策略的选择。必须注意的是，贪心算法不是对所有问题都能得到整体最优解，选择的贪心策略必须具备无后效性，即某个状态以后的过程不会影响以前的状态，只与当前状态有关。 所以对所采用的贪心策略一定要仔细分析其是否满足无后效性。 基本思路 建立数学模型来描述问题。 把求解的问题分成若干个子问题。 对每一子问题求解，得到子问题的局部最优解。 把子问题的解局部最优解合成原来解问题的一个解。 适用的问题前提：局部最优策略能导致产生全局最优解。 贪心算法适用的情况很少。一般，对一个问题分析是否适用于贪心算法，可以先选择该问题下的几个实际数据进行分析，就可做出判断。因为用贪心算法只能通过解局部最优解的策略来达到全局最优解，因此，一定要注意判断问题是否适合采用贪心算法策略，找到的解是否一定是问题的最优解。示例参考：https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/]]></content>
@@ -119,8 +158,8 @@
       </categories>
       <tags>
         <tag>Java</tag>
-        <tag>CompletionService</tag>
         <tag>线程池</tag>
+        <tag>CompletionService</tag>
       </tags>
   </entry>
   <entry>
@@ -146,9 +185,9 @@
       </categories>
       <tags>
         <tag>Java</tag>
-        <tag>线程池</tag>
         <tag>Executor</tag>
         <tag>ThreadPoolExecutor</tag>
+        <tag>线程池</tag>
       </tags>
   </entry>
   <entry>

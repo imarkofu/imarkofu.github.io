@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://blog.imarkofu.com/2019/04/03/CentOS-install-python3/</loc>
+    <lastmod>2019-04-19T14:44:08.946Z</lastmod>
+  </url>  <url>
+    <loc>https://blog.imarkofu.com/2019/04/02/CentOS-ekho-TTS/</loc>
+    <lastmod>2019-04-19T14:42:53.359Z</lastmod>
+  </url>  <url>
+    <loc>https://blog.imarkofu.com/2019/01/14/algorithm-dynamic-programming/</loc>
+    <lastmod>2019-01-14T16:05:29.778Z</lastmod>
+  </url>  <url>
     <loc>https://blog.imarkofu.com/2019/01/03/algorithm-greedy-algorithm/</loc>
     <lastmod>2019-01-03T15:20:24.423Z</lastmod>
   </url>  <url>
