@@ -2074,12 +2074,12 @@ body {
     .nav-toggle .line {
       background-color: #eee !important;
     }.header {
-        width: 960px;
+        width: 80%;
         margin: 0 auto;
       }
 
       .main-continer {
-        width: 960px;
+        width: 80%;
         margin: 0 auto;
       }
     body {
@@ -2151,38 +2151,45 @@ body {
       transition-property: all;
       transition-duration: 59s;
       transition-timing-function: cubic-bezier(.34,0,.84,1);
-    }.markdownIt-TOC a {
-      color: #eee;
-      border-bottom-color: #eee;
+    }.pisces .blog-header, .gemini .blog-header {
+        right: 0;
+      }
+      .pisces .section-layout-wrapper, .gemini .section-layout-wrapper {
+        flex-direction: row-reverse !important;
+      }.pisces .sidebar, .gemini .sidebar {
+        right: 0;
+      }.markdownIt-TOC a {
+      color: #868e96;
+      border-bottom-color: #868e96;
     }.markdownIt-TOC a:hover {
-      color: #fff;
-      border-bottom-color: #fff;
+      color: #000;
+      border-bottom-color: #000;
     }.active-current > a {
-      color: #fc6423 !important;
-      border-bottom-color: #fc6423 !important;
+      color: #ff6b6b !important !important;
+      border-bottom-color: #ff6b6b !important !important;
     }
     .sidebar-title-active {
-      color: #fc6423 !important;
-      border-bottom-color: #fc6423 !important;
+      color: #ff6b6b !important;
+      border-bottom-color: #ff6b6b !important;
     }
     .sidebar-title-item:hover {
-      color: #fc6423 !important;
+      color: #ff6b6b !important !important;
     }
     .active-show > a {
-      color: #fc6423;
-      border-bottom-color: #fc6423;
+      color: #ff6b6b !important;
+      border-bottom-color: #ff6b6b !important;
     }
     .active-hidden > a {
-      color: #fc6423;
-      border-bottom-color: #fc6423;
+      color: #ff6b6b !important;
+      border-bottom-color: #ff6b6b !important;
     }.bg-color {
       background-color: #fffffffe;
     }
       .site-meta {
-        background: #000 !important;
+        background: #222 !important;
       }
       .head-top-line {
-        background: #000 !important;
+        background: #222 !important;
       }
     .brand {
       background: #000000fe;
@@ -2195,7 +2202,7 @@ body {
     }.box-shadow-wrapper {
       box-shadow: none !important;
     }body {
-      cursor: default;
+      cursor: url('/media/curs/default_link.cur'), default;
     }a {
       cursor: pointer;
     }input, textarea, code {
