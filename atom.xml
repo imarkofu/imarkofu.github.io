@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://imarkofu.github.io</id>
+    <title>imarkofu&apos;s blogs</title>
+    <updated>2021-05-18T15:05:50.493Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://imarkofu.github.io"/>
+    <link rel="self" href="https://imarkofu.github.io/atom.xml"/>
+    <subtitle>the most important thing is endurance.</subtitle>
+    <logo>https://imarkofu.github.io/images/avatar.png</logo>
+    <icon>https://imarkofu.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2021, imarkofu&apos;s blogs</rights>
+</feed>
