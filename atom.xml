@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://imarkofu.github.io</id>
     <title>imarkofu&apos;s blogs</title>
-    <updated>2021-05-18T15:10:34.821Z</updated>
+    <updated>2021-05-18T15:14:43.201Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://imarkofu.github.io"/>
     <link rel="self" href="https://imarkofu.github.io/atom.xml"/>
@@ -10,4 +10,527 @@
     <logo>https://imarkofu.github.io/images/avatar.png</logo>
     <icon>https://imarkofu.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, imarkofu&apos;s blogs</rights>
+    <entry>
+        <title type="html"><![CDATA[CentOS6编译安装Python3.7]]></title>
+        <id>https://imarkofu.github.io/post/CentOS-install-python3/</id>
+        <link href="https://imarkofu.github.io/post/CentOS-install-python3/">
+        </link>
+        <updated>2019-04-03T12:21:10.000Z</updated>
+        <summary type="html"><![CDATA[<p>准备编译环境</p>
+<pre><code class="language-shell">yum install zlib-devel bzip2-devel openssl-devel ncurses-devel xz gcc-c++ gcc libffi-devel -y
+
+</code></pre>
+]]></summary>
+        <content type="html"><![CDATA[<p>准备编译环境</p>
+<pre><code class="language-shell">yum install zlib-devel bzip2-devel openssl-devel ncurses-devel xz gcc-c++ gcc libffi-devel -y
+
+</code></pre>
+<!-- more -->
+<p>下载并解压</p>
+<pre><code class="language-shell">wget https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tar.xz
+tar xf Python-3.7.3.tar.xz -C /usr/local/src/
+
+</code></pre>
+<p>编译安装</p>
+<pre><code class="language-shell">cd /usr/local/src/Python-3.7.3
+./configure --prefix=/usr/local/python3 --with-ssl --enable-optimizations
+make -j 4 &amp;&amp; make install
+
+最终提示如下，表示pip-9.0.1与setuptools-28.8.0同时安装成功
+if test &quot;x&quot; != &quot;x&quot; ; then \
+                rm -f /usr/local/python3/bin/python3-32; \
+                (cd /usr/local/python3/bin; ln -s python3.7-32 python3-32) \
+        fi
+rm -f /usr/local/python3/share/man/man1/python3.1
+(cd /usr/local/python3/share/man/man1; ln -s python3.7.1 python3.1)
+if test &quot;xupgrade&quot; != &quot;xno&quot;  ; then \
+                case upgrade in \
+                        upgrade) ensurepip=&quot;--upgrade&quot; ;; \
+                        install|*) ensurepip=&quot;&quot; ;; \
+                esac; \
+                 ./python -E -m ensurepip \
+                        $ensurepip --root=/ ; \
+        fi
+Looking in links: /tmp/tmpnffpnbr9
+Collecting setuptools
+Collecting pip
+Installing collected packages: setuptools, pip
+Successfully installed pip-19.0.3 setuptools-40.8.0
+</code></pre>
+<p>建立软连接</p>
+<pre><code class="language-shell">ln -s /usr/local/python3/bin/python3.7 /usr/local/bin/python3 
+ln -s /usr/local/python3/bin/pip3 /usr/local/bin/pip3
+
+</code></pre>
+<p>升级到最新的pip</p>
+<pre><code class="language-shell">pip3 install --upgrade pip
+</code></pre>
+<p>修改默认的Python</p>
+<pre><code class="language-shell">mv /usr/bin/python /usr/bin/python_bak
+ln -s /usr/local/python3/bin/python3.7 /usr/bin/python
+
+# 验证
+python -V
+
+
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[ekho中文TTS CentOS6编译安装]]></title>
+        <id>https://imarkofu.github.io/post/CentOS-ekho-TTS/</id>
+        <link href="https://imarkofu.github.io/post/CentOS-ekho-TTS/">
+        </link>
+        <updated>2019-04-02T12:21:10.000Z</updated>
+        <summary type="html"><![CDATA[<p>Ekho（余音）是一个免费、开源的中文语音合成软件。它目前支持粤语、普通话（国语）、广东台山话、诏安客语、藏语、雅言（中国古代通用语）和韩语（试验中），英语则通过eSpeak或Festival间接实现。Ekho支持Linux、Windows和Android平台。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>Ekho（余音）是一个免费、开源的中文语音合成软件。它目前支持粤语、普通话（国语）、广东台山话、诏安客语、藏语、雅言（中国古代通用语）和韩语（试验中），英语则通过eSpeak或Festival间接实现。Ekho支持Linux、Windows和Android平台。</p>
+<!-- more -->
+<p>源码下载页面：<a href="https://sourceforge.net/projects/e-guidedog/files/Ekho/" title="ekho源码下载">ekho</a>.<br>
+项目主页：<a href="http://www.eguidedog.net/ekho.php" title="ekho主页">ekho</a></p>
+<p>编译安装基于CentOS 6.10</p>
+<pre><code class="language-shell"># 添加 SCL 和 EPEL 软件仓库
+yum install centos-release-scl epel-release
+
+# 安装 GCC 5 和编译 ekho 的开发库
+yum install devtoolset-6-gcc* libsndfile-devel.x86_64 pulseaudio-libs-devel.x86_64 ncurses-devel.x86_64 espeak-devel.x86_64 lame-devel.x86_64
+
+# 使用 SCL 启动 shell 
+scl enable devtoolset-6 bash
+
+# 验证 GCC 版本 
+# which gcc
+# gcc --version
+
+# [可选] 设置 GCC 编译器选项
+export CFLAGS='-O2 -g -pipe -Wall -fexceptions -fno-strict-aliasing -fstack-protector -m64 -mtune=generic -fPIC'
+
+# 生成 MakeFile，编译，安装 
+./configure --prefix=/opt/app/ekho &amp;&amp; make -j 8 &amp;&amp; make install
+
+# 设置 ekho 相关环境变量 
+cat &gt; /etc/profile.d/ekho_env.sh &lt;&lt; EOF
+#!/bin/bash
+export PATH=\${PATH}:/opt/app/ekho/bin
+export EKHO_DATA_PATH=/opt/app/ekho/share/ekho-data/
+EOF
+
+# 退出 SCL shell 
+exit 
+</code></pre>
+<p>更换音频文件参考：<a href="http://cto.eguidedog.net/node/809" title="怎样替换Ekho的语音文件">怎样替换Ekho的语音文件</a><br>
+制作和添加新的语音声音参考：<a href="http://www.eguidedog.net/doc/doc_make_new_voice_cn.php" title="如何为Ekho添加新的声音">如何为Ekho添加新的声音</a></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[算法学习-动态规划]]></title>
+        <id>https://imarkofu.github.io/post/algorithm-dynamic-programming/</id>
+        <link href="https://imarkofu.github.io/post/algorithm-dynamic-programming/">
+        </link>
+        <updated>2019-01-14T15:03:27.000Z</updated>
+        <summary type="html"><![CDATA[<p><strong>动态规划</strong>（英语：Dynamic programming，简称DP）是一种在数学、管理科学、计算机科学、经济学和生物信息学中使用的，通过把原问题分解为相对简单的子问题的方式求解复杂问题的方法。</p>
+<p>动态规划常常适用于<strong>有重叠子问题</strong>和<strong>最优子结构性质</strong>的问题，动态规划方法所耗时间往往远少于朴素解法。</p>
+<p>动态规划背后的基本思想非常简单。大致上，若要解一个给定问题，我们需要解其不同部分（即子问题），再根据子问题的解以得出原问题的解。</p>
+<p>通常许多子问题非常相似，为此动态规划法试图仅仅解决每个子问题一次，从而减少计算量：一旦某个给定子问题的解已经算出，则将其记忆化存储，以便下次需要同一个子问题解之时直接查表。这种做法在重复子问题的数目关于输入的规模呈指数增长时特别有用。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p><strong>动态规划</strong>（英语：Dynamic programming，简称DP）是一种在数学、管理科学、计算机科学、经济学和生物信息学中使用的，通过把原问题分解为相对简单的子问题的方式求解复杂问题的方法。</p>
+<p>动态规划常常适用于<strong>有重叠子问题</strong>和<strong>最优子结构性质</strong>的问题，动态规划方法所耗时间往往远少于朴素解法。</p>
+<p>动态规划背后的基本思想非常简单。大致上，若要解一个给定问题，我们需要解其不同部分（即子问题），再根据子问题的解以得出原问题的解。</p>
+<p>通常许多子问题非常相似，为此动态规划法试图仅仅解决每个子问题一次，从而减少计算量：一旦某个给定子问题的解已经算出，则将其记忆化存储，以便下次需要同一个子问题解之时直接查表。这种做法在重复子问题的数目关于输入的规模呈指数增长时特别有用。</p>
+<h1 id="-more-适用情况"><!-- more --><br>
+适用情况</h1>
+<p>**最优子结构性质。如果问题的最优解所包含的子问题的解也是最优的，我们就称该问题具有最优子结构性质（即满足最优化原理）。最优子结构性质为动态规划算法解决问题提供了重要线索。<br>
+**无后效性。即子问题的解一旦确定，就不再改变，不受在这之后、包含它的更大的问题的求解决策影响。<br>
+**子问题重叠性质。子问题重叠性质是指在用递归算法自顶向下对问题进行求解时，每次产生的子问题并不总是新问题，有些子问题会被重复计算多次。动态规划算法正是利用了这种子问题的重叠性质，对每一个子问题只计算一次，然后将其计算结果保存在一个表格中，当再次需要计算已经计算过的子问题时，只是在表格中简单地查看一下结果，从而获得较高的效率。</p>
+<h1 id="实例">实例</h1>
+<p><strong>求解的关键：第一步找到问题的“状态”， 第二步找到“状态转移方程”</strong></p>
+<h2 id="示例一">示例一</h2>
+<p>一个序列有N个数：A[1],A[2],…,A[N]，求出最长上升子序列的长度。 (讲DP基本都会讲到的一个问题LIS：longest increasing subsequence)</p>
+<p>示例：5，3，4，8，6，7<br>
+**前1个数的LIS长度d(1)=1(序列：5)<br>
+**前2个数的LIS长度d(2)=1(序列：3；3前面没有比3小的)<br>
+**前3个数的LIS长度d(3)=2(序列：3，4；4前面有个比它小的3，所以d(3)=d(2)+1)<br>
+**前4个数的LIS长度d(4)=3(序列：3，4，8；8前面比它小的有3个数，所以 d(4)=max{d(1),d(2),d(3)}+1=3)</p>
+<p>状态转移方程<br>
+dp[i]=max{dp[j]}+1，j=[0,i-1]且a[j]&lt;a[i]<br>
+即为：到第i个元素的最长上升子序列=第0到i-1的元素的最长上升子序列+1<br>
+时间复杂度=O(n^2)</p>
+<p>这个问题还有另一种更优化的解法，时间复杂度为O(nlog(n))<br>
+参考：https://leetcode.com/problems/longest-increasing-subsequence/</p>
+<h2 id="示例二">示例二</h2>
+<p>平面上有N*M个格子，每个格子中放着一定数量的苹果。你从左上角的格子开始走到右下角， 每一步只能向下走或是向右走，每次走到一个格子上就把格子里的苹果收集起来， 这样下去，你最多能收集到多少个苹果。</p>
+<p>这个状态转移方程应该会更好理解<br>
+dp[i][j]=A[i][j]+max(dp[i+1][j], dp[i][j+1])，当然这里没有将边界问题考虑进来，实际编程中需要注意。</p>
+<p>即为：从第i,j位置到走到左下角能收集的最大苹果数量=当前格子内苹果数量+向右走或向下走的两种方式的最大值</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[算法学习-贪心算法]]></title>
+        <id>https://imarkofu.github.io/post/algorithm-greedy-algorithm/</id>
+        <link href="https://imarkofu.github.io/post/algorithm-greedy-algorithm/">
+        </link>
+        <updated>2019-01-03T15:11:57.000Z</updated>
+        <summary type="html"><![CDATA[<p>所谓贪心算法是指，在对问题求解时，总是做出在当前看来是最好的选择。也就是说，不从整体最优上加以考虑，他所做出的仅是在某种意义上的局部最优解。</p>
+<p>贪心算法没有固定的算法框架，算法设计的关键是贪心策略的选择。必须注意的是，贪心算法不是对所有问题都能得到整体最优解，选择的贪心策略必须具备无后效性，即某个状态以后的过程不会影响以前的状态，只与当前状态有关。</p>
+<p>所以对所采用的贪心策略一定要仔细分析其是否满足无后效性。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>所谓贪心算法是指，在对问题求解时，总是做出在当前看来是最好的选择。也就是说，不从整体最优上加以考虑，他所做出的仅是在某种意义上的局部最优解。</p>
+<p>贪心算法没有固定的算法框架，算法设计的关键是贪心策略的选择。必须注意的是，贪心算法不是对所有问题都能得到整体最优解，选择的贪心策略必须具备无后效性，即某个状态以后的过程不会影响以前的状态，只与当前状态有关。</p>
+<p>所以对所采用的贪心策略一定要仔细分析其是否满足无后效性。</p>
+<!-- more -->
+<h2 id="基本思路">基本思路</h2>
+<ul>
+<li>建立数学模型来描述问题。</li>
+<li>把求解的问题分成若干个子问题。</li>
+<li>对每一子问题求解，得到子问题的局部最优解。</li>
+<li>把子问题的解局部最优解合成原来解问题的一个解。</li>
+</ul>
+<h2 id="适用的问题">适用的问题</h2>
+<p>前提：局部最优策略能导致产生全局最优解。</p>
+<p>贪心算法适用的情况很少。一般，对一个问题分析是否适用于贪心算法，可以先选择该问题下的几个实际数据进行分析，就可做出判断。<br>
+因为用贪心算法只能通过解局部最优解的策略来达到全局最优解，因此，一定要注意判断问题是否适合采用贪心算法策略，找到的解是否一定是问题的最优解。<br>
+示例参考：https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock-ii/</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[算法学习-递归和分治]]></title>
+        <id>https://imarkofu.github.io/post/algorithm-recursion-and-division/</id>
+        <link href="https://imarkofu.github.io/post/algorithm-recursion-and-division/">
+        </link>
+        <updated>2019-01-03T14:51:01.000Z</updated>
+        <summary type="html"><![CDATA[<h1 id="递归">递归</h1>
+<p>直接或者间接不断反复调用自身来达到解决问题的方法。要求原始问题可以分解为相同问题的子问题。</p>
+<p><strong>先决条件</strong></p>
+<ul>
+<li>递归边界</li>
+<li>自身调用</li>
+</ul>
+]]></summary>
+        <content type="html"><![CDATA[<h1 id="递归">递归</h1>
+<p>直接或者间接不断反复调用自身来达到解决问题的方法。要求原始问题可以分解为相同问题的子问题。</p>
+<p><strong>先决条件</strong></p>
+<ul>
+<li>递归边界</li>
+<li>自身调用</li>
+</ul>
+<!-- more -->
+<p><strong>特点</strong><br>
+思路简单清晰，如果分析出将很快得到结果;递归将多次调用，使用到堆栈，算法效率低，费时费内存。</p>
+<p><strong>常用场景</strong></p>
+<ul>
+<li>阶乘</li>
+<li>斐波纳契数列</li>
+<li>汉诺塔问题</li>
+<li>整数划分</li>
+<li>枚举排列及二叉树</li>
+<li>图的搜索相关问题。</li>
+</ul>
+<h1 id="分治">分治</h1>
+<p>把一个复杂的问题分成两个或更多的相同或相似的子问题，再把子问题分成更小的子问题……直到最后子问题可以简单的直接求解，原问题的解即子问题的解的合并。</p>
+<p><strong>基本思想</strong><br>
+将一个难以直接解决的大问题，分割成一些规模较小的相同问题，以便各个击破，分而治之。</p>
+<p><strong>策略</strong><br>
+对于一个规模为n的问题，若该问题可以容易地解决（比如说规模n较小）则直接解决，否则将其分解为k个规模较小的子问题，这些子问题互相独立且与原问题形式相同，递归地解这些子问题，然后将各子问题的解合并得到原问题的解。</p>
+<p><strong>使用场景</strong></p>
+<ul>
+<li>问题的规模缩小到一定的程度就可以容易地解决</li>
+<li>问题可以分解为若干个规模较小的相同问题，即该问题具有最优子结构性质</li>
+<li>问题分解出的子问题的解可以合并为该问题的解</li>
+<li>问题所分解出的各个子问题是相互独立的，即子问题之间不包含公共的子子问题。</li>
+</ul>
+<p><strong>基本操作步骤</strong><br>
+分治法在每一层递归上都有三个步骤：</p>
+<ul>
+<li>分解：将原问题分解为若干个规模较小，相互独立，与原问题形式相同的子问题</li>
+<li>解决：若子问题规模较小而容易被解决则直接解，否则递归地解各个子问题</li>
+<li>合并：将各个子问题的解合并为原问题的解</li>
+</ul>
+<p><strong>常用场景</strong></p>
+<ul>
+<li>二分搜索</li>
+<li>大整数乘法</li>
+<li>Strassen矩阵乘法</li>
+<li>棋盘覆盖</li>
+<li>合并排序</li>
+<li>快速排序</li>
+<li>线性时间选择</li>
+<li>最接近点对问题</li>
+<li>循环赛日程表</li>
+<li>汉诺塔</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[算法学些-树、二叉树、二叉搜索树]]></title>
+        <id>https://imarkofu.github.io/post/algorithm-tree/</id>
+        <link href="https://imarkofu.github.io/post/algorithm-tree/">
+        </link>
+        <updated>2019-01-02T15:05:12.000Z</updated>
+        <summary type="html"><![CDATA[<h1 id="树">树</h1>
+<h2 id="定义">定义</h2>
+<p>树(Tree)是元素的集合，每棵树由多个节点（node）组成，用以储存元素。某些节点之间存在着一定的关系，用连线表示，连线称为边（edge）或者链接。边的上端点成为父节点，下端称为子节点。</p>
+]]></summary>
+        <content type="html"><![CDATA[<h1 id="树">树</h1>
+<h2 id="定义">定义</h2>
+<p>树(Tree)是元素的集合，每棵树由多个节点（node）组成，用以储存元素。某些节点之间存在着一定的关系，用连线表示，连线称为边（edge）或者链接。边的上端点成为父节点，下端称为子节点。</p>
+<!-- more -->
+<p><img src="/images/tree01.png" alt="tree" loading="lazy"><br>
+每个节点可以有多个子节点，而该节点则是相应子节点的父节点。但是每个节点只能有一个父节点（只有一个例外，也就是根节点，它没有父节点），如图中第一棵树的 S 节点即为根节点。而没有子节点的节点则称为叶子节点或叶节点，如上图中第一棵树的 A、R、X 节点。E、X 的父节点是一个节点，所以它们被称为兄弟节点。</p>
+<ul>
+<li>树是元素的集合</li>
+<li>该集合可以为空。此时树中没有元素，称之为空树（empty tree）。</li>
+<li>如果该集合不为空，那么该集合至少含有一个根节点以及 0 个或多个子树。根节点与它的子树的根节点用一个边（edge）或链接相连。</li>
+</ul>
+<h2 id="特征">特征</h2>
+<p>高度（Height）、深度（Depth）、层（Level）</p>
+<ul>
+<li>节点的高度 = 节点到叶子结点的最长路径（边数）</li>
+<li>节点的深度 = 根节点到这个节点所经历的边的个数</li>
+<li>节点的层数 = 节点的深度 + 1</li>
+<li>树的高度 = 根节点的高度<br>
+<img src="/images/tree02.png" alt="tree" loading="lazy"></li>
+</ul>
+<h1 id="二叉树">二叉树</h1>
+<h2 id="定义-2">定义</h2>
+<p>二叉树是一种特殊的数据结构，顾名思义，二叉树只有两个叉，也就是两个子节点：左子节点和右子节点。其中，左子节点是左子树的根节点，右子节点是右子树的根节点。当然，这并不是说，二叉树一定要求每个节点都必须有两个子节点，有的节点只有左子节点，而有的节点只有右子节点。</p>
+<h2 id="二叉树的三种遍历方法">二叉树的三种遍历方法</h2>
+<ul>
+<li>前序遍历（也叫先序遍历）：若二叉树为空，则空操作，否则，对于二叉树中的任意节点，先访问这个节点，然后再访问它的左子树，最后打印它的右子树。</li>
+<li>中序遍历：若二叉树为空，则空操作，否则，对于二叉树中的任意节点，先访问它的左子树，然后再访问这个节点本身，最后访问它的右子树。</li>
+<li>后序遍历：若二叉树为空，则空操作，否则，对于二叉树中的任意节点，先访问它的左子树，然后访问它的右子树，最后访问这个节点本身。</li>
+</ul>
+<pre><code class="language-java">    /** 先序递归遍历 */
+    void DLR(BiTree bt) {
+        if (null != bt) {
+            System.out.println(bt.data);
+            DLR(bt.lchild);
+            DLR(bt.rchild);
+        }
+    }
+    /** 中序递归遍历 */
+    void LDR(BiTree bt) {
+        if (null != bt) {
+            LDR(bt.lchild);
+            System.out.println(bt.data);
+            LDR(bt.rchild);
+        }
+    }
+    /** 后序递归遍历 */
+    void LRD(BiTree bt) {
+        if (null != bt) {
+            LRD(bt.lchild);
+            LRD(bt.rchild);
+            System.out.println(bt.data);
+        }
+    }
+</code></pre>
+<h2 id="树与二叉树的区别">树与二叉树的区别</h2>
+<ul>
+<li>二叉树的每个节点最多只能有两个节点，而树则无限制</li>
+<li>二叉树中节点的子树分为左子树和右子树，即使某个节点只有一棵树，也必须要指明这棵树是左子树还是右子树，也就是说，二叉树是有序的</li>
+<li>树不能为空，至少含有一个节点，而一棵二叉树可以为空</li>
+</ul>
+<h1 id="二叉搜索树">二叉搜索树</h1>
+<h2 id="定义-3">定义</h2>
+<p>二叉查找树（Binary Search Tree，BST）是一种特殊的二叉树，一棵二叉搜索树（BST）是一棵二叉树，其中，每个节点的值都要大于其左子树中任意节点的值而小于右子树中任意节点的值。</p>
+<h2 id="特征-2">特征</h2>
+<ul>
+<li>若它的左子树不为空，那么左子树上所有节点的key都小于根节点的key。</li>
+<li>若它的右子树不为空，那么右子树上所有节点的key都大于根节点的key。</li>
+<li>它的左右子树也分别为二叉排序树。</li>
+</ul>
+<h2 id="查找">查找</h2>
+<ul>
+<li>如果二叉查找树为空，则返回空操作，否则，执行一下操作；</li>
+<li>先取根节点，如果节点 X 等于根节点，则返回；</li>
+<li>如果节点小于根节点，则递归查找左子树；</li>
+<li>如果节点大于根节点，则递归查找右子树。</li>
+</ul>
+<h2 id="插入">插入</h2>
+<ul>
+<li>如果树是空的，则直接将新节点插入，否则，执行下面步骤。</li>
+<li>要插入的数据比根节点数据大，则到右子树中插入新数据，如果右子树为空，则将新数据直接插入到右子节点的位置；不为空，则继续遍历右子树，查找插入位置。</li>
+<li>要插入的数据比根节点数据小，则到左子树中插入数据，如果左子树为空，则直接将新数据插入到左子节点的位置；不为空，则继续遍历左子树，查找插入的位置。</li>
+</ul>
+<h2 id="删除">删除</h2>
+<ul>
+<li>第一种情况，如果要删除的节点没有子节点，直接将父节点指向要删除节点的指针指向 null。比如途中要删除的节点 55。</li>
+<li>第二种情况，如果要删除的节点只有一个节点，即只有左子节点或右子节点，则将父节点指向要删除节点的指针指向要删除节点的子节点即可。比如途中要删除的节点</li>
+<li>第三种情况，如果要删除的节点有两个子节点，则需要先找到这个节点右子树中的最小节点或者左子树中的最大节点，将其替换到要删除的节点上。然后删除这个右子树中的最小节点或左子树中的最大节点，这样就可以利用<br>
+1、2 两条规则来删除了。</li>
+</ul>
+<h2 id="查找最大-最小节点">查找最大、最小节点</h2>
+<p>查找最大、最小节点比较简单，比如要查找二叉查找树的最大节点时，如果二叉查找树为空，则返回空操作，如果不为空，则判断是否只有一个节点（即只有根节点），如果是则返回根节点，否则到右子树中递归查找。同理，查找最小节点类似，只是到左子树中查找而已。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[算法学习-哈希表]]></title>
+        <id>https://imarkofu.github.io/post/algorithm-hash-table/</id>
+        <link href="https://imarkofu.github.io/post/algorithm-hash-table/">
+        </link>
+        <updated>2019-01-02T13:18:12.000Z</updated>
+        <summary type="html"><![CDATA[<h1 id="定义">定义</h1>
+<p>散列表（Hash table，也叫哈希表），是根据关键码值(Key value)而直接进行访问的数据结构。它通过把关键码映射到表中一个位置来访问记录，以加快查找的速度。这个映射函数叫做散列函数（哈希函数），存放记录的数组叫做散列表。</p>
+]]></summary>
+        <content type="html"><![CDATA[<h1 id="定义">定义</h1>
+<p>散列表（Hash table，也叫哈希表），是根据关键码值(Key value)而直接进行访问的数据结构。它通过把关键码映射到表中一个位置来访问记录，以加快查找的速度。这个映射函数叫做散列函数（哈希函数），存放记录的数组叫做散列表。</p>
+<h1 id="-more-优缺点"><!-- more --><br>
+优缺点</h1>
+<ul>
+<li>优点：哈希表可以提供快速的操作。</li>
+<li>缺点：哈希表通常是基于数组的，数组创建后难于扩展。<br>
+也没有一种简便的方法可以以任何一种顺序〔例如从小到大）遍历表中的数据项。</li>
+</ul>
+<p>综上，如果不需要有序遍历数据，井且可以提前预测数据量的大小。那么哈希表在速度和易用性方面是无与伦比的。</p>
+<h1 id="哈希查找">哈希查找</h1>
+<ul>
+<li>使用哈希函数将被查找的键转换为数组的索引。</li>
+<li>处理哈希碰撞冲突。</li>
+</ul>
+<h1 id="散列函数">散列函数</h1>
+<p>若关键字为k，则其值存放在f(k)的存储位置上。由此，不需比较便可直接取得所查记录。称这个对应关系f为散列函数，按这个思想建立的表为散列表。</p>
+<p>若对于关键字集合中的任一个关键字，经散列函数映象到地址集合中任何一个地址的概率是相等的，则称此类散列函数为均匀散列函数(Uniform Hash function)，这就是使关键字经过散列函数得到一个&quot;随机的地址&quot;，从而减少碰撞。</p>
+<p>散列函数能使对一个数据序列的访问过程更加迅速有效，通过散列函数，数据元素将被更快地定位。</p>
+<p>一个好的散列函数一般应该考虑下列因素：</p>
+<ul>
+<li>计算简单，以便提高转换速度。</li>
+<li>关键词对应的地址空间分布均匀，以尽量减少冲突。</li>
+</ul>
+<h1 id="常见的散列函数">常见的散列函数</h1>
+<ul>
+<li>直接定址法：取关键字key的某个线性函数为散列地址，如Hash(key) = key  或 Hash(key) = A*key+B；A,B为常数</li>
+<li>除留取余法：关键值除以比散列表长度小的素数所得的余数作为散列地址。Hash(key) = key % p;</li>
+<li>平均取中法：先计算构成关键码的标识符的内码的平方，然后按照散列表的大小取中间的若干位作为散列地址。</li>
+<li>折叠法：把关键码自左到右分为位数相等的几部分，每一部分的位数应与散列表地址位数相同，只有最后一部分的位数可以短一些。把这些部分的数据叠加起来，就可以得到具有关键码的记录的散列地址。分为移位法和分界法。</li>
+<li>随机数法：选择一个随机函数，取关键字的随机函数作为它的哈希地址。</li>
+<li>数学分析法：设有N个d位数，每一位可能有r种不同的符号。这r种不同的符号在各位上出现的频率不一定相同，可能在某些位上分布均匀些，每种符号出现的机会均等；在某些位上分布不均匀，只有某几种符号经常出现。可根据散列表的大小，选取其中各种符号分布均匀的若干位作为散列地址。</li>
+</ul>
+<h1 id="处理冲突">处理冲突</h1>
+<p>对不同的关键字可能得到同一散列地址，即k1≠k2，而f(k1)=f(k2)，这种现象称为碰撞(英语:Collision)。具有相同函数值的关键字对该散列函数来说称做同义词。</p>
+<p>通过构造性能良好的散列函数，可以减少冲突，但一般不可能完全避免冲突，因此解决冲突是哈希法的另一个关键问题。创建哈希表和查找哈希表都会遇到冲突，两种情况下解决冲突的方法应该一致。</p>
+<h2 id="开放定址法">开放定址法</h2>
+<p>这种方法也称再散列法，其基本思想是：当关键字key的哈希地址p=H(key)出现冲突时，以p为基础，产生另一个哈希地址p1，如果p1仍然冲突，再以p为基础，产生另一个哈希地址p2，…，直到找出一个不冲突的哈希地址pi ，将相应元素存入其中。这种方法有一个通用的再散列函数形式：Hi=(H(key)+di)%m   i=1，2，…，m-1,其中H（key）为哈希函数，m 为表长，di称为增量序列，i为碰撞次数。增量序列的取值方式不同，相应的再散列方式也不同。增量序列主要有以下几种：</p>
+<p><strong>线性探测再散列</strong><br>
+di=1，2，3，…，m-1<br>
+这种方法的特点是：冲突发生时，顺序查看表中下一单元，直到找出一个空单元或查遍全表。</p>
+<p><strong>二次探测再散列</strong><br>
+di=12，-12，22，-22，…，k2，-k2( k&lt;=m/2 )<br>
+这种方法的特点是：冲突发生时，在表的左右进行跳跃式探测，比较灵活。</p>
+<p><strong>伪随机探测再散列</strong><br>
+di=伪随机数序列。<br>
+线性探测再散列的优点是：只要哈希表不满，就一定能找到一个不冲突的哈希地址，而二次探测再散列和伪随机探测再散列则不一定。线性探测再散列容易产生“二次聚集”，即在处理同义词的冲突时又导致非同义词的冲突。</p>
+<h2 id="再哈希法">再哈希法</h2>
+<p>这种方法是同时构造多个不同的哈希函数：Hi=RHi（key），i=1，2,3，…,n。<br>
+当哈希地址H1=RH1（key）发生冲突时，再计算H2=RH2（key）……，直到冲突不再产生。这种方法不易产生聚集，但增加了计算时间。</p>
+<h2 id="链地址法拉链法">链地址法(拉链法)</h2>
+<p>这种方法的基本思想是将所有哈希地址相同的元素构成一个称为同义词链的单链表，并将单链表的头指针存在哈希表（数组）中，因而查找、插入和删除主要在同义词链中进行。若选定的散列表长度为m，则可将散列表定义为一个由m个头指针组成的指针数组T[0..m-1]。凡是散列地址为i的结点，均插入到以T[i]为头指针的单链表中。T中各分量的初值均应为空指针。链地址法适用于经常进行插入和删除的情况。</p>
+<p>与开放定址法相比，拉链法有如下几个优点：</p>
+<ul>
+<li>拉链法处理冲突简单，且无堆积现象，即非同义词决不会发生冲突，因此平均查找长度较短；</li>
+<li>由于拉链法中各链表上的结点空间是动态申请的，故它更适合于造表前无法确定表长的情况；</li>
+<li>开放定址法为减少冲突，要求装填因子α较小，故当结点规模较大时会浪费很多空间。而拉链法中理论上可取α≥1，且结点较大时，拉链法中增加的指针域可忽略不计，因此节省空间；（散列表的装填因子定义为：α= 填入表中的元素个数 / 散列表的长度）</li>
+<li>在用拉链法构造的散列表中，删除结点的操作易于实现。只要简单地删去链表上相应的结点即可。而对开放定址法构造的散列表，删除结点不能简单地将被删结点的空间置为空，否则将截断在它之后填入散列表的同义词结点的查找路径。这是因为各种开放定址法中，空地址单元都被理解没有查找到元素。 因此在用开放定址法处理冲突的散列表上执行删除操作，只能在被删结点上做删除标记，而不能真正删除结点。</li>
+</ul>
+<p>拉链法的缺点<br>
+指针需要额外的空间，故当结点规模较小时，开放定址法较为节省空间，此时将节省的指针空间用来扩大散列表的规模，可使装填因子变小，这又减少了开放定址法中的冲突，从而提高平均查找速度。</p>
+<h2 id="建立公共溢出区">建立公共溢出区</h2>
+<p>将哈希表分为基本表和溢出表两部分，凡是和基本表发生冲突的元素，一律填入溢出表(在这个方法里面是把元素分开两个表来存储)。</p>
+<h1 id="查找性能">查找性能</h1>
+<p>散列表的查找过程基本上和造表过程相同。一些关键码可通过散列函数转换的地址直接找到，另一些关键码在散列函数得到的地址上产生了冲突，需要按处理冲突的方法进行查找。在介绍的三种处理冲突的方法中，产生冲突后的查找仍然是给定值与关键码进行比较的过程。所以，对散列表查找效率的量度，依然用平均查找长度来衡量。</p>
+<p>查找过程中，关键码的比较次数，取决于产生冲突的多少，产生的冲突少，查找效率就高，产生的冲突多，查找效率就低。因此，影响产生冲突多少的因素，也就是影响查找效率的因素。</p>
+<p><strong>影响产生冲突多少有以下三个因素:</strong></p>
+<ul>
+<li>散列函数是否均匀;</li>
+<li>处理冲突的方法;</li>
+<li>散列表的装填因子。</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[算法学习-优先队列]]></title>
+        <id>https://imarkofu.github.io/post/algorithm-priority-queue/</id>
+        <link href="https://imarkofu.github.io/post/algorithm-priority-queue/">
+        </link>
+        <updated>2019-01-01T15:58:36.000Z</updated>
+        <summary type="html"><![CDATA[<p>普通的队列是一种先进先出的数据结构，元素在队列尾追加，而从队列头删除。在优先队列中，元素被赋予优先级。当访问元素时，具有最高优先级的元素最先删除。优先队列具有最高级先出 （largest-in，first-out）的行为特征。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>普通的队列是一种先进先出的数据结构，元素在队列尾追加，而从队列头删除。在优先队列中，元素被赋予优先级。当访问元素时，具有最高优先级的元素最先删除。优先队列具有最高级先出 （largest-in，first-out）的行为特征。</p>
+<h1 id="-more-实现机制"><!-- more --><br>
+实现机制</h1>
+<ul>
+<li>Heap(Binary, Binomial, Fibonacci)</li>
+<li>Binary Search Tree</li>
+</ul>
+<p>各种堆的时间复杂堆参考：https://en.wikipedia.org/wiki/Heap_(data_structure)<br>
+<img src="/images/heap01.png" alt="各种堆的时间复杂度" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[算法学习-堆栈和队列]]></title>
+        <id>https://imarkofu.github.io/post/algorithm-stack-and-queue/</id>
+        <link href="https://imarkofu.github.io/post/algorithm-stack-and-queue/">
+        </link>
+        <updated>2019-01-01T15:24:08.000Z</updated>
+        <summary type="html"><![CDATA[<p>栈和队列都是动态集合，可以理解为线性表或线性表实现的数据结构。它可以由数组实现，也可以由链表实现。<br>
+和数组链表等不一样的是，栈、队列添加、删除数据的位置都是预先设定的。在栈中，被删除的是最近被插入的元素，栈实现的是一种先进后出的策略。而队列中，被删去的总是在集合中存在时间最长的元素，队列实现的是一种先进先出的策略。<br>
+栈和队列是非常有用的数据结构，在计算机中很多的地方使用了栈、队列的思想。函数执行的压栈及出栈，消息队列的使用等等。本文最后将介绍栈和队列的常见使用场景，递归转化。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>栈和队列都是动态集合，可以理解为线性表或线性表实现的数据结构。它可以由数组实现，也可以由链表实现。<br>
+和数组链表等不一样的是，栈、队列添加、删除数据的位置都是预先设定的。在栈中，被删除的是最近被插入的元素，栈实现的是一种先进后出的策略。而队列中，被删去的总是在集合中存在时间最长的元素，队列实现的是一种先进先出的策略。<br>
+栈和队列是非常有用的数据结构，在计算机中很多的地方使用了栈、队列的思想。函数执行的压栈及出栈，消息队列的使用等等。本文最后将介绍栈和队列的常见使用场景，递归转化。</p>
+<h1 id="-more-堆栈"><!-- more --><br>
+堆栈</h1>
+<p>一种特殊的线性表，其只允许在固定的一端进行插入和删除元素操作。进行数据插入和删除操作的一端称为栈顶，另一端称为栈底。不含任何元素的栈称为空栈，栈又称为后进先出的线性表。<br>
+<img src="/images/stack01.jpeg" alt="堆栈" loading="lazy"></p>
+<h1 id="队列">队列</h1>
+<p>只允许在一端进行插入数据操作，在另一端进行删除操作的特殊线性表。插入的叫队尾，删除的叫队头，对列具有先进先出的特性。<br>
+<img src="/images/queue01.jpeg" alt="队列" loading="lazy"></p>
+<p>时间复杂度对比参考：http://www.bigocheatsheet.com/<br>
+<img src="/images/bigocheatsheet.png" alt="时间复杂度对比" loading="lazy"></p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[算法学习-数组与链表]]></title>
+        <id>https://imarkofu.github.io/post/algorithm-array-and-linkedlist/</id>
+        <link href="https://imarkofu.github.io/post/algorithm-array-and-linkedlist/">
+        </link>
+        <updated>2019-01-01T14:24:08.000Z</updated>
+        <summary type="html"><![CDATA[<p>数组和链表是数据结构中最基本的部分，也是其余众多数据结构的基础。即使在Java中，这两种结构使用的也很普遍。</p>
+]]></summary>
+        <content type="html"><![CDATA[<p>数组和链表是数据结构中最基本的部分，也是其余众多数据结构的基础。即使在Java中，这两种结构使用的也很普遍。</p>
+<h1 id="-more-数组"><!-- more --><br>
+数组</h1>
+<p>在java中，数组定义为一种基本类型，其可以通过下标获取到对应位置的数据。那么这种结构的数据，在内存中是怎么存放的呢？<br>
+<img src="/images/array01.png" alt="array01" loading="lazy"><br>
+正如上图所示，数组在内存中是一段连续的存储单元，每个数据依次放在每个单元中。分析这种结构，我们可以得出以下几个结论：</p>
+<ul>
+<li>创建一个数组，必须声明其长度，以在内存中寻找合适的一段连续存储单元。这也意味着数组的大小是固定的，我们无法动态调整其大小。</li>
+<li>想要获取数组中第i个元素，其时间复杂度是 O(1)，因为可以根据其地址直接找到它。同理修改也是。</li>
+<li>数组对查询表现一般，要想查找一个元素，需要遍历，时间复杂度为O(n)。</li>
+<li>因为地址连续，想要在数组中插入一个元素是复杂的，因为从插入位置起，后边的所有元素都需要向后移动一位。同理删除也是，只是移动方向为向前。并且，当数组存满时，就无法继续插入了。</li>
+<li>因为数组要占据一整块内存，有可能产生许多的碎片，也可能因为找不到合适的内存块，而导致存储失败。<br>
+故：数组大小固定，查找迅速，增删复杂，需要完整的内存块，容易产生碎片。</li>
+</ul>
+<h1 id="链表">链表</h1>
+<p>链表是一种离散存储结构，其在内存中存储不是连续的，每个数据元素都通过一个指针指向其下一个元素的地址。根据指针域的不同，链表又分为单链表、双向链表、循环链表等，这里我们只分析单链表。示意图如下所示：<br>
+<img src="/images/linkedlist.png" alt="linkedlist" loading="lazy"></p>
+<p>分析这种结构，我们可以得出以下几个结论：</p>
+<ul>
+<li>声明一个链表时，不需要知道其长度，也不需要连续的内存块，所以其大小可以动态调整。</li>
+<li>链表的每个元素都分为数据域和指针域，前者是实际存储的数据，后者则指向下一个元素的地址。和数组相比，每个元素需要占用的内存更大了。</li>
+<li>要获取链表的第 i 个元素变得复杂，因为其地址存放在它上一个元素的指针域里，所以只能从第一个元素起，进行 i 次操作。同理修改也是。</li>
+<li>链表对查询表现也一般，需要遍历，时间复杂度为O(n)。</li>
+<li>增加与删除一个元素更方便了，因为没有对内存地址的限制，我们只需要在对应节点合理处理下指针域的值，就可以把一个元素插入链表或者从链表删除。</li>
+<li>链表对内存的要求很小，只要能够存储下一个数据元素的内存块都可以使用，因此不会造成碎片化。<br>
+故：大小可以动态调整，增删迅速，查找较慢，数据元素所占内存略多，不需要整块内存块，不会造成碎片化。</li>
+</ul>
+<h1 id="对比">对比</h1>
+<p>数组按位置查找迅速，链表增删方便<br>
+数组是固定大小，链表可以随时扩充与缩减<br>
+链表每个元素占据内存略多于数组<br>
+数组和链表在查询方面表现都比较一般，耗时较长<br>
+时间复杂度参考：http://www.bigocheatsheet.com/<br>
+<img src="/images/time.png" alt="time" loading="lazy"></p>
+]]></content>
+    </entry>
 </feed>
