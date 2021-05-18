@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://imarkofu.github.io</id>
+    <id>http://localhost:4000</id>
     <title>imarkofu&apos;s blogs</title>
-    <updated>2021-05-18T15:14:43.201Z</updated>
+    <updated>2021-05-18T16:00:03.175Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://imarkofu.github.io"/>
-    <link rel="self" href="https://imarkofu.github.io/atom.xml"/>
+    <link rel="alternate" href="http://localhost:4000"/>
+    <link rel="self" href="http://localhost:4000/atom.xml"/>
     <subtitle>the most important thing is endurance.</subtitle>
-    <logo>https://imarkofu.github.io/images/avatar.png</logo>
-    <icon>https://imarkofu.github.io/favicon.ico</icon>
+    <logo>http://localhost:4000/images/avatar.png</logo>
+    <icon>http://localhost:4000/favicon.ico</icon>
     <rights>All rights reserved 2021, imarkofu&apos;s blogs</rights>
     <entry>
         <title type="html"><![CDATA[CentOS6编译安装Python3.7]]></title>
-        <id>https://imarkofu.github.io/post/CentOS-install-python3/</id>
-        <link href="https://imarkofu.github.io/post/CentOS-install-python3/">
+        <id>http://localhost:4000/post/CentOS-install-python3/</id>
+        <link href="http://localhost:4000/post/CentOS-install-python3/">
         </link>
         <updated>2019-04-03T12:21:10.000Z</updated>
         <summary type="html"><![CDATA[<p>准备编译环境</p>
@@ -78,8 +78,8 @@ python -V
     </entry>
     <entry>
         <title type="html"><![CDATA[ekho中文TTS CentOS6编译安装]]></title>
-        <id>https://imarkofu.github.io/post/CentOS-ekho-TTS/</id>
-        <link href="https://imarkofu.github.io/post/CentOS-ekho-TTS/">
+        <id>http://localhost:4000/post/CentOS-ekho-TTS/</id>
+        <link href="http://localhost:4000/post/CentOS-ekho-TTS/">
         </link>
         <updated>2019-04-02T12:21:10.000Z</updated>
         <summary type="html"><![CDATA[<p>Ekho（余音）是一个免费、开源的中文语音合成软件。它目前支持粤语、普通话（国语）、广东台山话、诏安客语、藏语、雅言（中国古代通用语）和韩语（试验中），英语则通过eSpeak或Festival间接实现。Ekho支持Linux、Windows和Android平台。</p>
@@ -124,8 +124,8 @@ exit
     </entry>
     <entry>
         <title type="html"><![CDATA[算法学习-动态规划]]></title>
-        <id>https://imarkofu.github.io/post/algorithm-dynamic-programming/</id>
-        <link href="https://imarkofu.github.io/post/algorithm-dynamic-programming/">
+        <id>http://localhost:4000/post/algorithm-dynamic-programming/</id>
+        <link href="http://localhost:4000/post/algorithm-dynamic-programming/">
         </link>
         <updated>2019-01-14T15:03:27.000Z</updated>
         <summary type="html"><![CDATA[<p><strong>动态规划</strong>（英语：Dynamic programming，简称DP）是一种在数学、管理科学、计算机科学、经济学和生物信息学中使用的，通过把原问题分解为相对简单的子问题的方式求解复杂问题的方法。</p>
@@ -166,8 +166,8 @@ dp[i][j]=A[i][j]+max(dp[i+1][j], dp[i][j+1])，当然这里没有将边界问题
     </entry>
     <entry>
         <title type="html"><![CDATA[算法学习-贪心算法]]></title>
-        <id>https://imarkofu.github.io/post/algorithm-greedy-algorithm/</id>
-        <link href="https://imarkofu.github.io/post/algorithm-greedy-algorithm/">
+        <id>http://localhost:4000/post/algorithm-greedy-algorithm/</id>
+        <link href="http://localhost:4000/post/algorithm-greedy-algorithm/">
         </link>
         <updated>2019-01-03T15:11:57.000Z</updated>
         <summary type="html"><![CDATA[<p>所谓贪心算法是指，在对问题求解时，总是做出在当前看来是最好的选择。也就是说，不从整体最优上加以考虑，他所做出的仅是在某种意义上的局部最优解。</p>
@@ -194,8 +194,8 @@ dp[i][j]=A[i][j]+max(dp[i+1][j], dp[i][j+1])，当然这里没有将边界问题
     </entry>
     <entry>
         <title type="html"><![CDATA[算法学习-递归和分治]]></title>
-        <id>https://imarkofu.github.io/post/algorithm-recursion-and-division/</id>
-        <link href="https://imarkofu.github.io/post/algorithm-recursion-and-division/">
+        <id>http://localhost:4000/post/algorithm-recursion-and-division/</id>
+        <link href="http://localhost:4000/post/algorithm-recursion-and-division/">
         </link>
         <updated>2019-01-03T14:51:01.000Z</updated>
         <summary type="html"><![CDATA[<h1 id="递归">递归</h1>
@@ -262,8 +262,8 @@ dp[i][j]=A[i][j]+max(dp[i+1][j], dp[i][j+1])，当然这里没有将边界问题
     </entry>
     <entry>
         <title type="html"><![CDATA[算法学些-树、二叉树、二叉搜索树]]></title>
-        <id>https://imarkofu.github.io/post/algorithm-tree/</id>
-        <link href="https://imarkofu.github.io/post/algorithm-tree/">
+        <id>http://localhost:4000/post/algorithm-tree/</id>
+        <link href="http://localhost:4000/post/algorithm-tree/">
         </link>
         <updated>2019-01-02T15:05:12.000Z</updated>
         <summary type="html"><![CDATA[<h1 id="树">树</h1>
@@ -365,8 +365,8 @@ dp[i][j]=A[i][j]+max(dp[i+1][j], dp[i][j+1])，当然这里没有将边界问题
     </entry>
     <entry>
         <title type="html"><![CDATA[算法学习-哈希表]]></title>
-        <id>https://imarkofu.github.io/post/algorithm-hash-table/</id>
-        <link href="https://imarkofu.github.io/post/algorithm-hash-table/">
+        <id>http://localhost:4000/post/algorithm-hash-table/</id>
+        <link href="http://localhost:4000/post/algorithm-hash-table/">
         </link>
         <updated>2019-01-02T13:18:12.000Z</updated>
         <summary type="html"><![CDATA[<h1 id="定义">定义</h1>
@@ -448,8 +448,8 @@ di=伪随机数序列。<br>
     </entry>
     <entry>
         <title type="html"><![CDATA[算法学习-优先队列]]></title>
-        <id>https://imarkofu.github.io/post/algorithm-priority-queue/</id>
-        <link href="https://imarkofu.github.io/post/algorithm-priority-queue/">
+        <id>http://localhost:4000/post/algorithm-priority-queue/</id>
+        <link href="http://localhost:4000/post/algorithm-priority-queue/">
         </link>
         <updated>2019-01-01T15:58:36.000Z</updated>
         <summary type="html"><![CDATA[<p>普通的队列是一种先进先出的数据结构，元素在队列尾追加，而从队列头删除。在优先队列中，元素被赋予优先级。当访问元素时，具有最高优先级的元素最先删除。优先队列具有最高级先出 （largest-in，first-out）的行为特征。</p>
@@ -467,8 +467,8 @@ di=伪随机数序列。<br>
     </entry>
     <entry>
         <title type="html"><![CDATA[算法学习-堆栈和队列]]></title>
-        <id>https://imarkofu.github.io/post/algorithm-stack-and-queue/</id>
-        <link href="https://imarkofu.github.io/post/algorithm-stack-and-queue/">
+        <id>http://localhost:4000/post/algorithm-stack-and-queue/</id>
+        <link href="http://localhost:4000/post/algorithm-stack-and-queue/">
         </link>
         <updated>2019-01-01T15:24:08.000Z</updated>
         <summary type="html"><![CDATA[<p>栈和队列都是动态集合，可以理解为线性表或线性表实现的数据结构。它可以由数组实现，也可以由链表实现。<br>
@@ -491,8 +491,8 @@ di=伪随机数序列。<br>
     </entry>
     <entry>
         <title type="html"><![CDATA[算法学习-数组与链表]]></title>
-        <id>https://imarkofu.github.io/post/algorithm-array-and-linkedlist/</id>
-        <link href="https://imarkofu.github.io/post/algorithm-array-and-linkedlist/">
+        <id>http://localhost:4000/post/algorithm-array-and-linkedlist/</id>
+        <link href="http://localhost:4000/post/algorithm-array-and-linkedlist/">
         </link>
         <updated>2019-01-01T14:24:08.000Z</updated>
         <summary type="html"><![CDATA[<p>数组和链表是数据结构中最基本的部分，也是其余众多数据结构的基础。即使在Java中，这两种结构使用的也很普遍。</p>
