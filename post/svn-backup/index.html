@@ -9,7 +9,7 @@
 <meta name="description" content="the most important thing is endurance.">
 <meta name="theme-color" content="#222">
 <title>SVN备份方案 | imarkofu&#39;s blog</title>
-<link rel="shortcut icon" href="/favicon.ico?v=1621385926162">
+<link rel="shortcut icon" href="/favicon.ico?v=1621386936496">
 <link rel="stylesheet" href="/styles/main.css">
 <link rel="stylesheet" href="/media/css/pisces.css">
 
@@ -667,28 +667,53 @@ svn propdel svn:sync-lock --revprop -r0  file:///从仓库路径</p>
   </div>
 </div>
             
-  
-    
-      <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
-<script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/valine@1.4.4/dist/Valine.min.js"></script>
+<div id="vcomments" style="padding: 10px 0px 0px 0px"></div>
 
-<div id="gitalk-container"></div>
+<style>
+  .v .veditor {
+    min-height: 10rem;
+    background-image: url('');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right;
+    background-color: rgba(255, 255, 255, 0);
+    resize: none;
+  }
 
+  .v .vwrap {
+    border: 1px solid #000 !important;
+  }
+
+  .v .vbtn {
+    padding: .4rem 1.2rem !important;
+    border-color: #fff !important;
+    background-color: #49b1f5 !important;
+    color: #fff !important;
+    font-size: .7rem !important;
+  }
+
+  .v .vcards .vcard .vh .vmeta .vat {
+    padding: 0 .8rem !important;
+    border: 1px solid #00c4b6 !important;
+    border-radius: 5px !important;
+    color: #00c4b6 !important;
+  }
+</style>
 <script>
-  var gitalk = new Gitalk({
-    clientID: 'cd378b07df77c5a75438',
-    clientSecret: '5bc6f831c17f66b0e224e5a5d3e0b4fef19a239b',
-    repo: 'imarkofu.github.io',
-    owner: 'imarkofu',
-    admin: ['imarkofu'],
-    id: (location.pathname).substring(0, 49),      // Ensure uniqueness and length less than 50
-    distractionFreeMode: false  // Facebook-like distraction free mode
-  })
-  gitalk.render('gitalk-container')
+  new Valine({
+    el: '#vcomments',
+    appId: 'QhQ5bWwlgX3eklhFvc4nbaAb-gzGzoHsz',
+    appKey: 'AMHb4keDrEUWxjRvsLBxL8d3',
+    avatar: '',
+    placeholder: '',
+    pageSize: '',
+    lang: 'zh-cn',
+    visitor: 'true' === 'true',
+    highlight: 'true' === 'true',
+    avatarForce: 'true' === 'false',
+  });
 </script>
-    
-    
-  
 
           </div>
         </div>
