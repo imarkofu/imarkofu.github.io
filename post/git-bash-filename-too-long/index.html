@@ -8,7 +8,7 @@
 <meta name="keywords" content="imarkofu的个人博客 Gallen">
 <meta name="description" content="the most important thing is endurance.">
 <meta name="theme-color" content="#222">
-<title>centos 6.5 编译安装 mysql 5.5.40 | imarkofu&#39;s blog</title>
+<title>git bash下的Filename too long | imarkofu&#39;s blog</title>
 <link rel="shortcut icon" href="/favicon.ico?v=1622645047562">
 <link rel="stylesheet" href="/styles/main.css">
 <link rel="stylesheet" href="/media/css/pisces.css">
@@ -39,8 +39,8 @@
   })();
 </script>
 
-  <meta name="description" content="centos 6.5 编译安装 mysql 5.5.40" />
-  <meta name="keywords" content="MySQL,数据库,编译安装" />
+  <meta name="description" content="git bash下的Filename too long" />
+  <meta name="keywords" content="git" />
 </head>
 
 <body>
@@ -184,7 +184,8 @@
       <div class="sidebar-body pisces" id="sidebar_body">
         
           
-            
+            <div class="post-side-meta" id="post_side_meta">
+              
 <div class="sidebar-wrapper box-shadow-wrapper bg-color">
   <div class="sidebar-item">
     <img class="site-author-image right-motion" src="/images/avatar.png"/>
@@ -226,6 +227,196 @@
 
 
 </div>
+            </div>
+            <div class="post-toc sidebar-body-active" id="post_toc" style="opacity: 1;">
+              <div class="toc-box right-motion">
+  <div class="toc-wrapper auto-number auto"
+    id="toc_wrapper">
+    <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E6%8F%8F%E8%BF%B0">描述</a></li>
+<li><a href="#%E8%A7%A3%E5%86%B3">解决</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+</div>
+
+<script>
+
+  let lastTop = 0, lList = [], hList = [], postBody, lastIndex = -1;
+  let active = 'active-show', activeClass = 'active-current';
+  let tocWrapper = document.querySelector('#toc_wrapper');
+  let tocContent = tocWrapper.children[0];
+  let autoNumber = tocWrapper && tocWrapper.classList.contains('auto-number');
+
+  function addTocNumber(elem, deep) {
+    if (!elem) {
+      return;
+    }
+    let prop = elem.__proto__;
+
+    if (prop === HTMLUListElement.prototype) {
+      for (let i = 0; i < elem.children.length; i++) {
+        addTocNumber(elem.children[i], deep + (i + 1) + '.');
+      }
+    } else if (prop === HTMLLIElement.prototype) {
+      // 保存li元素
+      if (elem.children[0].__proto__ === HTMLAnchorElement.prototype) {
+        lList.push(elem);
+      }
+      for (let i = 0; i < elem.children.length; i++) {
+        let cur = elem.children[i];
+        if (cur.__proto__ === HTMLAnchorElement.prototype) {
+          if (autoNumber) {
+            cur.text = deep + ' ' + cur.text;
+          }
+        } else if (cur.__proto__ === HTMLUListElement.prototype) {
+          addTocNumber(cur, deep);
+        }
+      }
+    }
+  }
+
+  function removeParentActiveClass() {
+    let parents = tocContent.querySelectorAll('.' + active)
+    parents.forEach(function (elem) {
+      elem.classList.remove(active);
+    });
+  }
+
+  function addActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.add(activeClass);
+    }
+  }
+
+  function removeActiveClass(index) {
+    if (index >= 0 && index < hList.length) {
+      lList[index].classList.remove(activeClass);
+    }
+  }
+
+  function addActiveLiElemment(elem, parent) {
+    if (!elem || elem === parent) {
+      return;
+    } else {
+      if (elem.__proto__ === HTMLLIElement.prototype) {
+        elem.classList.add(active);
+      }
+      addActiveLiElemment(elem.parentElement, parent);
+    }
+  }
+
+  function showToc() {
+    if (tocWrapper) {
+      postBody = document.querySelector('#post_body');
+      for (let i = 0; i < postBody.children.length; i++) {
+        if (postBody.children[i].__proto__ === HTMLHeadingElement.prototype) {
+          hList.push(postBody.children[i]);
+        }
+      }
+      if (tocWrapper.classList.contains('compress')) {
+        tocContent.classList.add('closed');
+      } else if (tocWrapper.classList.contains('no_compress')) {
+        tocContent.classList.add('expanded');
+      } else {
+        if (hList.length > 10) {
+          active = 'active-hidden'
+          tocContent.classList.add('closed');
+        } else {
+          tocContent.classList.add('expanded');
+        }
+      }
+    }
+  }
+
+  (function () {
+    // 处理不是从#一级标题开始目录
+    if (tocContent.children.length === 1 && tocContent.children[0].__proto__ === HTMLLIElement.prototype) {
+      let con = tocContent.children[0].children[0];
+      tocContent.innerHTML = con.innerHTML;
+    }
+    let markdownItTOC = document.querySelector('.markdownIt-TOC');
+    let innerHeight = window.innerHeight;
+    markdownItTOC.style = `max-height: ${innerHeight - 80 > 0 ? innerHeight - 80 : innerHeight}px`
+    addTocNumber(tocContent, '');
+  })();
+
+  document.addEventListener('scroll', function (e) {
+    if (lList.length <= 0) {
+      return;
+    }
+    let scrollTop = document.scrollingElement.scrollTop + 10;
+    let dir;
+
+    if (lastTop - scrollTop > 0) {
+      dir = 'up';
+    } else {
+      dir = 'down';
+    }
+
+    lastTop = scrollTop;
+    if (scrollTop <= 0) {
+      if (lastIndex >= 0 && lastIndex < hList.length) {
+        lList[lastIndex].classList.remove(activeClass);
+      }
+      return;
+    }
+
+    let current = 0, hasFind = false;
+    for (let i = 0; i < hList.length; i++) {
+      if (hList[i].offsetTop > scrollTop) {
+        current = i;
+        hasFind = true;
+        break;
+      }
+    }
+    if (!hasFind && scrollTop > lList[lList.length - 1].offsetTop) {
+      current = hList.length - 1;
+    } else {
+      current--;
+    }
+    if (dir === 'down') {
+      if (current > lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex)
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    } else {
+      if (current < lastIndex) {
+        addActiveClass(current);
+        removeActiveClass(lastIndex);
+        lastIndex = current;
+        removeParentActiveClass();
+        lList[current] && addActiveLiElemment(lList[current].parentElement, tocContent);
+      }
+    }
+  });
+
+
+  window.addEventListener('load', function () {
+    showToc();
+    document.querySelector('#sidebar').style = 'display: block;';
+    tocWrapper.classList.add('toc-active');
+    setTimeout(function () {
+      if ("createEvent" in document) {
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent("scroll", false, true);
+        document.dispatchEvent(evt);
+      }
+      else {
+        document.fireEvent("scroll");
+      }
+    }, 500)
+  })
+
+</script>
+            </div>
           
         
       </div>
@@ -313,8 +504,8 @@
           <div class="section bg-color post post-page">
             <header class="post-header">
   <h1 class="post-title">
-    <a class="post-title-link" href="https://imarkofu.github.io/post/centos-compile-and-install-MySQL/">
-      centos 6.5 编译安装 mysql 5.5.40
+    <a class="post-title-link" href="https://imarkofu.github.io/post/git-bash-filename-too-long/">
+      git bash下的Filename too long
     </a>
   </h1>
   <div class="post-meta">
@@ -322,7 +513,7 @@
     <span class="meta-item pc-show">
       <i class="fa fa-calendar-o"></i>
       <span>发布于</span>
-      <span>2016-11-30</span>
+      <span>2021-06-02</span>
       <span class="post-meta-divider pc-show">|</span>
     </span>
     
@@ -331,20 +522,8 @@
       <span class="pc-show">分类于</span>
       
       
-      <a href="https://imarkofu.github.io/tag/IrVH3x6Yv1n/">
-        <span>MySQL</span>
-      </a>、
-      
-      
-      
-      <a href="https://imarkofu.github.io/tag/QQpdoTi9OSb/">
-        <span>数据库</span>
-      </a>、
-      
-      
-      
-      <a href="https://imarkofu.github.io/tag/RBiFvVZmwpt/">
-        <span>编译安装</span>
+      <a href="https://imarkofu.github.io/tag/smEw4gxeP/">
+        <span>git</span>
       </a>
       
       
@@ -353,17 +532,17 @@
     
     <span class="meta-item">
       <i class="fa fa-clock-o"></i>
-      <span>10分钟</span>
+      <span>2分钟</span>
     </span>
     <span class="meta-item">
       <span class="post-meta-divider">|</span>
       <i class="fa fa-file-word-o"></i>
-      <span>1960<span class="pc-show">字数</span></span>
+      <span>259<span class="pc-show">字数</span></span>
     </span>
     
     
     
-    <span id="/post/centos-compile-and-install-MySQL/" data-flag-title="centos 6.5 编译安装 mysql 5.5.40" class="meta-item pc-show leancloud_visitors">
+    <span id="/post/git-bash-filename-too-long/" data-flag-title="git bash下的Filename too long" class="meta-item pc-show leancloud_visitors">
       <span class="post-meta-divider">|</span>
       <i class="fa fa-eye"></i>
       <span>浏览量：<span class="leancloud-visitors-count"></span></span>
@@ -372,272 +551,33 @@
   </div>
 </header>
             <div class="post-body next-md-body" id="post_body">
-              <p>在开始之前我们需要准备一些库文件。</p>
-<pre><code>[root@imarkofu ~]# yum install zlib-devel openssl-devel gcc-c++ gcc bison cmake ncurses-devel -y
-</code></pre>
-<p>一定要安装这些包， LZ之前没有安装就开始编译MySQL，踩了好多坑， 后来上网一查才发现需要这些文件和管理工具才行。因此一定要安装。</p>
-<!-- more -->
-<p><strong>还有如果大家编译过程中出错, 请一定要执行:</strong></p>
-<pre><code>[root@imarkofu ~]# rm -f CMakeCache.txt
-</code></pre>
-<p>之后再继续安装。<br>
-安装好之后我们来添加MySQL数据库需要的账户和目录：</p>
-<pre><code>[root@imarkofu ~]# groupadd -r mysql
-[root@imarkofu ~]# useradd -g mysql -r -s /sbin/nologin mysql
-[root@imarkofu ~]# id mysql #确认用户
-[root@imarkofu ~]# mkdir /var/data/mysql -p #存放数据库文件
-[root@imarkofu ~]# chown mysql:mysql /var/data -R
-</code></pre>
-<p>下载MySQL源码包：<a href="http://pan.baidu.com/s/1c0fdgdE">mysql-5.5.40.tar.gz</a><br>
-下载后上传到服务器</p>
-<pre><code>[root@imarkofu ~]# tar -xvf mysql-5.5.40.tar.gz -C /usr/local/src/
-[root@imarkofu ~]# cd /usr/local/src/mysql-5.5.40
-</code></pre>
-<p>cmake编译MySQL的一些常用选项：</p>
-<pre><code>------------------------------------------------------------
-cmake mysql 编译安装:
-./configure -&gt; cmake .
-./configure --help -&gt; cmake -LH -&gt; ccmake .
-------------------------------------------------------------
-指定安装文件的安装路径常用选项
--DCMAKE_INSTALL_PREFIX=/usr/local/mysql
--DMYSQL_DATADIR=/data/mysql
--DSYSCONFDIR=/etc
-------------------------------------------------------------
-默认编译的存储引擎包括: csv, myisma, myisammrg, heap. 若要安装其他存储引擎,可以使用类似如下的编译选项
--DWITH_INNOBASE_STORAGE_ENGINE=1
--DWITH_ARCHIVE_STORAGE_ENGINE=1
--DWITH_BLACKHOLE_STORAGE_ENGINE=1
-------------------------------------------------------------
-若要明确指出不编译某存储引擎, 可以使用类似如下的选项:
--DWITHOUT_&lt;ENGINE&gt;_STORAGE_ENGINE=1
-例如:
--DWITHOUT_EXAMPLE_STORAGE_ENGINE=1
--DWITHOUT_FEDERATED_STORAGE_ENGINE=1
-------------------------------------------------------------
-若要编译进其他功能, 如SSl等, 可使用类似如下选项来实现编译时使用某库文件或者, 或者不使用某库文件.
--DWITH_READLINE=1
--DWITH_SSL=system
--DWITH_ZLIB=system
--DWITH_LIBWRAP=0
-------------------------------------------------------------
-其他常用选项:
--DMYSQL_TCP_PORT=3306
--MYDQL_UNIX_ADDR=/tmp/mysql.sock
--DENABLED_LOCAL_INFILE=1
--DEXTRA_CHARSETS=all
--DDEFAULT_CHARSET=utf8
--DDEFAULT_COLLATION=utf8_general_ci
--DWITH_DEBUG=0
--DENABLE_PROFILING=1
-------------------------------------------------------------
-</code></pre>
-<p>开始编译</p>
-<pre><code>[root@imarkofu mysql-5.5.40]# cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql-5.5.40 \
--DMYSQL_DATADIR=/var/data/mysql \ #数据库目录
--DSYSCONFDIR=/etc \ #配置文件目录
--DWITH_INNOBASE_STORAGE_ENGINE=1 \ #启用InnoDB存储引擎
--DWITH_ARCHIVE_STORAGE_ENGINE=1 \ #启用ARCHIVE存储引擎
--DWITH_BLACKHOLE_STORAGE_ENGINE=1 \ #启用黑洞存储引擎
--DWITH_READLINE=1 \
--DWITH_SSL=system \ #启用SSL协议
--DWITH_ZLIB=system \ #启用Zlib压缩
--DWITH_LIBWRAP=0 \
--DDEFAULT_CHARSET=utf8 \ #设置字符集utf8
--DMYSQL_UNIX_ADDR=/tmp/mysql.sock \
--DDEFAULT_COLLATION=utf8_general_ci
-</code></pre>
-<p>如果出现以下信息，那么恭喜你第一阶段的配置顺利完成了<br>
-过程中如果出现错误也不要害怕， 因为你长经验的时刻就要来了， 通常是因为缺少了什么依赖的包而出现的问题， 你可以把你的错误信息铁道Google或者百度中去搜索。</p>
-<pre><code>....(此处省略一万字)
--- Performing Test HAVE_IB_GCC_ATOMIC_BUILTINS
--- Performing Test HAVE_IB_GCC_ATOMIC_BUILTINS - Success
--- Performing Test HAVE_IB_ATOMIC_PTHREAD_T_GCC
--- Performing Test HAVE_IB_ATOMIC_PTHREAD_T_GCC - Success
--- Check size of pthread_t
--- Check size of pthread_t - done
--- Performing Test HAVE_PEERCRED
--- Performing Test HAVE_PEERCRED - Success
--- Library mysqlclient depends on OSLIBS -lpthread;z;m;rt;/usr/lib64/libssl.so;/usr/lib64/libcrypto.so;dl
--- Configuring done
--- Generating done
--- Build files have been written to: /usr/local/mysql-5.5.40
-</code></pre>
-<p>继续</p>
-<pre><code>[root@imarkofu mysql-5.5.40]# make
-....(此处省略一万字)
-Scanning dependencies of target udf_example
-[100%] Building C object sql/CMakeFiles/udf_example.dir/udf_example.c.o
-Linking C shared module udf_example.so
-[100%] Built target udf_example
-Scanning dependencies of target my_safe_process
-[100%] Building CXX object mysql-test/lib/My/SafeProcess/CMakeFiles/my_safe_process.dir/safe_process.cc.o
-Linking CXX executable my_safe_process
-[100%] Built target my_safe_process
-</code></pre>
-<p>如果没有报错，继续</p>
-<pre><code>[root@imarkofu mysql-5.5.40]# make install
-....(此处省略一万字)
--- Installing: /usr/local/mysql-5.5.40/man/man1/mysql_upgrade.1
--- Installing: /usr/local/mysql-5.5.40/man/man1/mysqlslap.1
--- Installing: /usr/local/mysql-5.5.40/man/man1/replace.1
--- Installing: /usr/local/mysql-5.5.40/man/man1/mysql.1
--- Installing: /usr/local/mysql-5.5.40/man/man1/mysql_setpermission.1
--- Installing: /usr/local/mysql-5.5.40/man/man1/mysql_secure_installation.1
--- Installing: /usr/local/mysql-5.5.40/man/man1/mysqlimport.1
--- Installing: /usr/local/mysql-5.5.40/man/man8/mysqld.8
-</code></pre>
-<p>全部安装ok之后我们来配置下文档的权限</p>
-<pre><code>[root@imarkofu mysql-5.5.40]# chown :mysql /usr/local/mysql-5.5.40 -R
-[root@imarkofu mysql-5.5.40]# cd /usr/local/mysql-5.5.40/
-[root@imarkofu mysql-5.5.40]# chmod +x scripts/mysql_install_db
-[root@imarkofu mysql-5.5.40]# scripts/mysql_install_db --user=mysql --datadir=/var/data/mysql/ #执行初始化脚本
-....(此处省略一万字)
-./bin/mysqladmin -u root password 'new-password'
-./bin/mysqladmin -u root -h imarkofu password 'new-password'
- 
-Alternatively you can run:
-./bin/mysql_secure_installation
- 
-which will also give you the option of removing the test
-databases and anonymous user created by default.  This is
-strongly recommended for production servers.
- 
-See the manual for more instructions.
- 
-You can start the MySQL daemon with:
-cd . ; ./bin/mysqld_safe &amp;
- 
-You can test the MySQL daemon with mysql-test-run.pl
-cd ./mysql-test ; perl mysql-test-run.pl
- 
-Please report any problems at http://bugs.mysql.com/
-</code></pre>
-<p>如果你获得的信息和上面一样的话, 恭喜你, 你又离成功近了一步</p>
-<pre><code>[root@imarkofu mysql-5.5.40]# ls /var/data/mysql/ #看一下是否生成了文件
-mysql  performance_schema  test
-</code></pre>
-<p>如果是这样那么继续<br>
-创建服务脚本</p>
-<pre><code>[root@imarkofu mysql-5.5.40]# cp support-files/mysql.server /etc/rc.d/init.d/mysqld 
-[root@imarkofu mysql-5.5.40]# chmod +x /etc/rc.d/init.d/mysqld #添加mysqld执行权限
-[root@imarkofu mysql-5.5.40]# chkconfig --add mysqld #添加开机启动
-</code></pre>
-<p>创建配置文件</p>
-<pre><code>[root@imarkofu mysql-5.5.40]# mv /etc/my.cnf{,.bak}
-[root@imarkofu mysql-5.5.40]# cp support-files/my-large.cnf /etc/my.cnf
-[root@imarkofu mysql-5.5.40]# vim /etc/my.cnf
+              <h2 id="描述">描述</h2>
+<p>从github克隆一个项目下发出现了错误：</p>
+<pre><code class="language-shell">cglong@cglong MINGW64 /c/Tools/workspace/idea/open
+$ git clone git@github.com:imarkofu/shenyu.git
+Cloning into 'shenyu'...
+Warning: Permanently added the RSA host key for IP address '52.192.72.89' to the list of known hosts.
+remote: Enumerating objects: 53479, done.
+remote: Counting objects: 100% (15170/15170), done.
+remote: Compressing objects: 100% (4534/4534), done.
+remote: Total 53479 (delta 4593), reused 14765 (delta 4365), pack-reused 38309
+Receiving objects: 100% (53479/53479), 20.72 MiB | 128.00 KiB/s, done.
+Resolving deltas: 100% (17773/17773), done.
+error: unable to create file shenyu-spring-boot-starter/shenyu-spring-boot-starter-sync-data-center/shenyu-spring-boot-starter-sync-data-websocket/src/main/java/org/apache/shenyu/springboot/starter/sync/data/websocket/WebsocketSyncDataConfiguration.java: Filename too long
+error: unable to create file shenyu-spring-boot-starter/shenyu-spring-boot-starter-sync-data-center/shenyu-spring-boot-starter-sync-data-websocket/src/test/java/org/apache/shenyu/springboot/starter/sync/data/websocket/WebsocketSyncDataConfigurationTest.java: Filename too long
+Checking out files: 100% (1439/1439), done.
+fatal: unable to checkout working tree
+warning: Clone succeeded, but checkout failed.
+You can inspect what was checked out with 'git status'
+and retry the checkout with 'git checkout -f HEAD'
 
-#找到如下部分
-[mysqld]
-port            = 3306
-socket          = /tmp/mysql.sock
-skip-external-locking
-key_buffer_size = 256M
-max_allowed_packet = 1M
-table_open_cache = 256
-sort_buffer_size = 1M
-read_buffer_size = 1M
-read_rnd_buffer_size = 4M
-myisam_sort_buffer_size = 64M
-thread_cache_size = 8
-query_cache_size= 16M
-# Try number of CPU's*2 for thread_concurrency
-thread_concurrency = 8
-datadir= /var/data/mysql #添加次行内容, 就是数据库文件存放路径
-:wq
-#保存退出
 
-[root@imarkofu mysql-5.5.40]# vim /etc/profile.d/mysql.sh
-export PATH=/usr/local/mysql-5.5.40/bin:$PATH #添加此行
 </code></pre>
-<p>好了，尝试着启动MySQL服务</p>
-<pre><code>[root@imarkofu mysql-5.5.40]# service mysqld start
-Starting MySQL..                                           [  OK  ]
-[root@imarkofu mysql-5.5.40]#
-[root@imarkofu mysql-5.5.40]# ss -tnl| grep :3306 
-LISTEN     0      50                        *:3306                     *:*    
-#发现正常监听 3306端口
-</code></pre>
-<p>距离胜利越来越近了<br>
-然后配置MySQL管理员密码进行初始化</p>
-<pre><code>[root@imarkofu mysql-5.5.40]# mysql #使用客户端登录
-Welcome to the MySQL monitor.  Commands end with ; or \g.
-Your MySQL connection id is 1
-Server version: 5.5.40-log Source distribution
-Copyright (c) 2000, 2014, Oracle and/or its affiliates. All rights reserved.
-Oracle is a registered trademark of Oracle Corporation and/or its
-affiliates. Other names may be trademarks of their respective
-owners.
-Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-mysql&gt; 
-#查看一下默认存在的用户
-mysql&gt; select user,password,host from mysql.user; 
-+------+----------+-----------+
-| user | password | host      |
-+------+----------+-----------+
-| root |          | localhost |
-| root |          | imarkofu  |
-| root |          | 127.0.0.1 |
-| root |          | ::1       |
-|      |          | localhost |
-|      |          | imarkofu  |
-+------+----------+-----------+
-6 rows in set (0.00 sec)
-mysql&gt; 
+<p>git有可以创建4096长度的文件名，然而在windows最多是260，因为git用了旧版本的windows api。</p>
+<h2 id="解决">解决</h2>
+<pre><code class="language-shell">git config --global core.longpaths true
 
-#删除默认存在的账户, 要求用户只能从本地服务器访问数据库
-mysql&gt; delete from mysql.user where host!='localhost'; 
-Query OK, 4 rows affected (0.00 sec)
-
-#修改root管理员账号密码
-mysql&gt; update mysql.user set password=PASSWORD('p@ssw0rd') where user='root'; 
-Query OK, 1 row affected (0.00 sec)
-Rows matched: 1  Changed: 1  Warnings: 0
- 
-#更新数据库
-mysql&gt; FLUSH PRIVILEGES;
-Query OK, 0 rows affected (0.00 sec)
- 
-#看一下修改后的结果
-mysql&gt; select user,password,host from mysql.user;
-+------+-------------------------------------------+-----------+
-| user | password                                  | host      |
-+------+-------------------------------------------+-----------+
-| root | *D7E39C3AF517EC9EF7086223B036E0B4F22821F8 | localhost |
-|      |                                           | localhost |
-+------+-------------------------------------------+-----------+
-2 rows in set (0.00 sec)
-mysql&gt; \q
-Bye
-[root@imarkofu mysql-5.5.40]#
 </code></pre>
-<p>然后就可以使用新密码登陆了</p>
-<pre><code>[root@imarkofu mysql-5.5.40]# mysql -u root -h localhost -p
-Enter password: #输入刚才设置的密码
-Welcome to the MySQL monitor.  Commands end with ; or \g.
-Your MySQL connection id is 4
-Server version: 5.5.40-log Source distribution
-Copyright (c) 2000, 2014, Oracle and/or its affiliates. All rights reserved.
-Oracle is a registered trademark of Oracle Corporation and/or its
-affiliates. Other names may be trademarks of their respective
-owners.
-Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-mysql&gt;
-</code></pre>
-<p>好了MySQL到此 就安装成功了<br>
-对了，忘记了导入开发的库文件了， ok 很快就好</p>
-<pre><code>[root@imarkofu mysql-5.5.40]# ln -sv /usr/local/mysql/include/ /usr/include/mysql #软连接到系统库中
-[root@imarkofu mysql-5.5.40]# vim /etc/ld.so.conf.d/mysql.conf #编辑这个文件, 并且添加如下路径
-/usr/local/mysql-5.5.40/lib
-[root@imarkofu mysql-5.5.40]# ldconfig #重新加载库文件
-[root@imarkofu mysql-5.5.40]# ldconfig -p | grep mysql #让我们来检查下是不是加载好了
-    libmysqlclient_r.so.16 (libc6,x86-64) =&gt; /usr/lib64/mysql/libmysqlclient_r.so.16
-    libmysqlclient.so.18 (libc6,x86-64) =&gt; /usr/local/mysql-5.5.40/lib/libmysqlclient.so.18
-    libmysqlclient.so.16 (libc6,x86-64) =&gt; /usr/lib64/mysql/libmysqlclient.so.16
-    libmysqlclient.so (libc6,x86-64) =&gt; /usr/local/mysql-5.5.40/lib/libmysqlclient.so
-</code></pre>
-<p>至此，MySQL5.5.40 编译安装完成</p>
 
             </div>
             <div class="post-footer">
@@ -648,7 +588,7 @@ mysql&gt;
     </li>
     <li class="post-copyright-link">
       <strong>本文链接：</strong>
-      <a href="https://imarkofu.github.io/post/centos-compile-and-install-MySQL/" title="centos 6.5 编译安装 mysql 5.5.40">https://imarkofu.github.io/post/centos-compile-and-install-MySQL/</a>
+      <a href="https://imarkofu.github.io/post/git-bash-filename-too-long/" title="git bash下的Filename too long">https://imarkofu.github.io/post/git-bash-filename-too-long/</a>
     </li>
     <li class="post-copyright-license">
       <strong>版权声明： </strong>
@@ -657,25 +597,17 @@ mysql&gt;
   </ul>
   <div class="tags">
     
-      <a href="https://imarkofu.github.io/tag/IrVH3x6Yv1n/"># MySQL</a>
-    
-      <a href="https://imarkofu.github.io/tag/QQpdoTi9OSb/"># 数据库</a>
-    
-      <a href="https://imarkofu.github.io/tag/RBiFvVZmwpt/"># 编译安装</a>
+      <a href="https://imarkofu.github.io/tag/smEw4gxeP/"># git</a>
     
   </div>
   <div class="nav">
     <div class="nav-prev">
       
-        <i class="fa fa-chevron-left"></i>
-        <a class="nav-pc-next" title="CentOS 6.5安全加固及性能优化" href="https://imarkofu.github.io/post/centos-safety-reinforcement-and-performance-optimization/">CentOS 6.5安全加固及性能优化</a class="nav-pc-next">
-        <a class="nav-mobile-prev" title="CentOS 6.5安全加固及性能优化" href="https://imarkofu.github.io/post/centos-safety-reinforcement-and-performance-optimization/">上一篇</a>
-      
     </div>
     <div class="nav-next">
       
-        <a class="nav-pc-next" title="mysql in 子查询 效率慢 优化" href="https://imarkofu.github.io/post/optimize-mysql-in-subqueries/">mysql in 子查询 效率慢 优化</a>
-        <a class="nav-mobile-next" title="mysql in 子查询 效率慢 优化" href="https://imarkofu.github.io/post/optimize-mysql-in-subqueries/">下一篇</a>
+        <a class="nav-pc-next" title="CentOS6编译安装Python3.7" href="https://imarkofu.github.io/post/CentOS-install-python3/">CentOS6编译安装Python3.7</a>
+        <a class="nav-mobile-next" title="CentOS6编译安装Python3.7" href="https://imarkofu.github.io/post/CentOS-install-python3/">下一篇</a>
         <i class="fa fa-chevron-right"></i>
       
     </div>
