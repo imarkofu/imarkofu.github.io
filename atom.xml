@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://imarkofu.github.io</id>
     <title>imarkofu&apos;s blog</title>
-    <updated>2021-06-02T16:15:44.560Z</updated>
+    <updated>2021-06-03T13:46:52.471Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://imarkofu.github.io"/>
     <link rel="self" href="https://imarkofu.github.io/atom.xml"/>
@@ -10,6 +10,130 @@
     <logo>https://imarkofu.github.io/images/avatar.png</logo>
     <icon>https://imarkofu.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, imarkofu&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[spring boot跨域问题]]></title>
+        <id>https://imarkofu.github.io/post/spring-boot-allowed-origins/</id>
+        <link href="https://imarkofu.github.io/post/spring-boot-allowed-origins/">
+        </link>
+        <updated>2021-06-03T12:12:24.000Z</updated>
+        <summary type="html"><![CDATA[<h2 id="描述">描述</h2>
+<p>目前应用开发前后端分离是大趋势，故而前后端部署在不同的两个域也是大概率事件，那么势必需要解决跨域请求的问题。</p>
+<p>本文描述spring-boot项目中如何解决请求跨域的三种解决方案，以及升级spring-boot 2.4后的跨域问题。</p>
+]]></summary>
+        <content type="html"><![CDATA[<h2 id="描述">描述</h2>
+<p>目前应用开发前后端分离是大趋势，故而前后端部署在不同的两个域也是大概率事件，那么势必需要解决跨域请求的问题。</p>
+<p>本文描述spring-boot项目中如何解决请求跨域的三种解决方案，以及升级spring-boot 2.4后的跨域问题。</p>
+<!-- more -->
+<h2 id="解决">解决</h2>
+<h3 id="方案一">方案一</h3>
+<p>通过实现WebMvcConfigurer接口的addCorsMappings方法解决跨域问题。</p>
+<pre><code class="language-java">@Configuration
+public class WebMvcConfiguration implements WebMvcConfigurer {
+
+	@Override
+    public void addCorsMappings(CorsRegistry registry) {
+        // 所有的当前站点的请求地址，都支持跨域访问。
+        registry.addMapping(&quot;/**&quot;)
+                // 所有的外部域都可跨域访问
+                .allowedOrigins(&quot;*&quot;)
+                // 是否支持跨域用户凭证
+                .allowCredentials(true)
+                // 当前站点支持的跨域请求类型是什么
+                .allowedMethods(&quot;GET&quot;, &quot;POST&quot;, &quot;PUT&quot;, &quot;DELETE&quot;)
+                .maxAge(3600);
+    }
+}
+</code></pre>
+<h3 id="方案二">方案二</h3>
+<p>使用@CrossOrigin注解实现跨域</p>
+<pre><code class="language-java">@RestController
+@CrossOrigin(origins = &quot;*&quot;, maxAge = 3600)
+public class TestController {
+    
+    @GetMapping(&quot;/test&quot;)
+    public ApiResult&lt;String&gt; test() {
+        return null;
+    }
+}
+</code></pre>
+<h3 id="方案三">方案三</h3>
+<p>使用Filter实现跨域</p>
+<pre><code class="language-java">	@ConditionalOnProperty(name = &quot;manage.api.cors&quot;, havingValue = &quot;true&quot;)
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.addAllowedOrigin(&quot;*&quot;);
+        config.addAllowedHeader(&quot;*&quot;);
+        config.addAllowedMethod(&quot;*&quot;);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration(&quot;/**&quot;, config);
+        return new CorsFilter(source);
+    }
+</code></pre>
+<h2 id="注意">注意</h2>
+<p>spring-boot升级到2.4版本以后，使用如下方案时会抛一下异常</p>
+<pre><code class="language-java">java.lang.IllegalArgumentException: When allowCredentials is true, allowedOrigins cannot contain the special value &quot;*&quot; since that cannot be set on the &quot;Access-Control-Allow-Origin&quot; response header. To allow credentials to a set of origins, list them explicitly or consider using &quot;allowedOriginPatterns&quot; instead.
+
+// 解决方法提示内容中也有香惜的说明
+// 当allowCredentials设置为'true'时，allowedOrigins不能包含特殊值'*'
+// 可以考虑使用allowedOriginPatterns代替
+
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[maven项目编译：程序包com.sun.image.codec.jpeg不存在]]></title>
+        <id>https://imarkofu.github.io/post/maven-compiler-image-api-not-exist/</id>
+        <link href="https://imarkofu.github.io/post/maven-compiler-image-api-not-exist/">
+        </link>
+        <updated>2021-06-03T04:12:24.000Z</updated>
+        <summary type="html"><![CDATA[<h2 id="描述">描述</h2>
+<p>maven编译项目提示<br>
+程序包com.sun.image.codec.jpeg不存在<br>
+然后这个类位于：jre/lib/rt.jar</p>
+]]></summary>
+        <content type="html"><![CDATA[<h2 id="描述">描述</h2>
+<p>maven编译项目提示<br>
+程序包com.sun.image.codec.jpeg不存在<br>
+然后这个类位于：jre/lib/rt.jar</p>
+<!-- more -->
+<h2 id="解决">解决</h2>
+<h3 id="方案一">方案一</h3>
+<p>java_home下面的lib/dt.jar中没有这个文件，导致编译失败。<br>
+通过配置maven-compiler-plugin插件可以解决此问题。</p>
+<pre><code class="language-xml">&lt;build&gt;
+    &lt;plugins&gt;
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+            &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+            &lt;version&gt;2.3.2&lt;/version&gt;
+            &lt;configuration&gt;
+                &lt;source&gt;${maven.compiler.source}&lt;/source&gt;
+                &lt;target&gt;${maven.compiler.target}&lt;/target&gt;
+                &lt;encoding&gt;UTF-8&lt;/encoding&gt;
+                &lt;compilerArguments&gt;
+                    &lt;verbose /&gt;
+                    &lt;bootclasspath&gt;${java.home}/lib/rt.jar;${java.home}/lib/jce.jar&lt;/bootclasspath&gt;
+                &lt;/compilerArguments&gt;
+            &lt;/configuration&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;
+
+</code></pre>
+<p>缺陷：在windows下面用';'分隔，linux下面用':'分隔。</p>
+<h3 id="方案二">方案二</h3>
+<p>更换API</p>
+<pre><code class="language-java">JPEGImageEncoder en = JPEGCodec.createJPEGEncoder(os);
+en.encode(targetImage);
+
+// 更换为
+ImageIO.write(targetImage, &quot;jpg&quot;, os);
+</code></pre>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[git bash下的Filename too long]]></title>
         <id>https://imarkofu.github.io/post/git-bash-filename-too-long/</id>
@@ -504,49 +628,6 @@ di=伪随机数序列。<br>
 <li>处理冲突的方法;</li>
 <li>散列表的装填因子。</li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[算法学习-优先队列]]></title>
-        <id>https://imarkofu.github.io/post/algorithm-priority-queue/</id>
-        <link href="https://imarkofu.github.io/post/algorithm-priority-queue/">
-        </link>
-        <updated>2019-01-01T15:58:36.000Z</updated>
-        <summary type="html"><![CDATA[<p>普通的队列是一种先进先出的数据结构，元素在队列尾追加，而从队列头删除。在优先队列中，元素被赋予优先级。当访问元素时，具有最高优先级的元素最先删除。优先队列具有最高级先出 （largest-in，first-out）的行为特征。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>普通的队列是一种先进先出的数据结构，元素在队列尾追加，而从队列头删除。在优先队列中，元素被赋予优先级。当访问元素时，具有最高优先级的元素最先删除。优先队列具有最高级先出 （largest-in，first-out）的行为特征。</p>
-<h1 id="-more-实现机制"><!-- more --><br>
-实现机制</h1>
-<ul>
-<li>Heap(Binary, Binomial, Fibonacci)</li>
-<li>Binary Search Tree</li>
-</ul>
-<p>各种堆的时间复杂堆参考：https://en.wikipedia.org/wiki/Heap_(data_structure)<br>
-<img src="/images/heap01.png" alt="各种堆的时间复杂度" loading="lazy"></p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[算法学习-堆栈和队列]]></title>
-        <id>https://imarkofu.github.io/post/algorithm-stack-and-queue/</id>
-        <link href="https://imarkofu.github.io/post/algorithm-stack-and-queue/">
-        </link>
-        <updated>2019-01-01T15:24:08.000Z</updated>
-        <summary type="html"><![CDATA[<p>栈和队列都是动态集合，可以理解为线性表或线性表实现的数据结构。它可以由数组实现，也可以由链表实现。<br>
-和数组链表等不一样的是，栈、队列添加、删除数据的位置都是预先设定的。在栈中，被删除的是最近被插入的元素，栈实现的是一种先进后出的策略。而队列中，被删去的总是在集合中存在时间最长的元素，队列实现的是一种先进先出的策略。<br>
-栈和队列是非常有用的数据结构，在计算机中很多的地方使用了栈、队列的思想。函数执行的压栈及出栈，消息队列的使用等等。本文最后将介绍栈和队列的常见使用场景，递归转化。</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>栈和队列都是动态集合，可以理解为线性表或线性表实现的数据结构。它可以由数组实现，也可以由链表实现。<br>
-和数组链表等不一样的是，栈、队列添加、删除数据的位置都是预先设定的。在栈中，被删除的是最近被插入的元素，栈实现的是一种先进后出的策略。而队列中，被删去的总是在集合中存在时间最长的元素，队列实现的是一种先进先出的策略。<br>
-栈和队列是非常有用的数据结构，在计算机中很多的地方使用了栈、队列的思想。函数执行的压栈及出栈，消息队列的使用等等。本文最后将介绍栈和队列的常见使用场景，递归转化。</p>
-<h1 id="-more-堆栈"><!-- more --><br>
-堆栈</h1>
-<p>一种特殊的线性表，其只允许在固定的一端进行插入和删除元素操作。进行数据插入和删除操作的一端称为栈顶，另一端称为栈底。不含任何元素的栈称为空栈，栈又称为后进先出的线性表。<br>
-<img src="/images/stack01.jpeg" alt="堆栈" loading="lazy"></p>
-<h1 id="队列">队列</h1>
-<p>只允许在一端进行插入数据操作，在另一端进行删除操作的特殊线性表。插入的叫队尾，删除的叫队头，对列具有先进先出的特性。<br>
-<img src="/images/queue01.jpeg" alt="队列" loading="lazy"></p>
-<p>时间复杂度对比参考：http://www.bigocheatsheet.com/<br>
-<img src="/images/bigocheatsheet.png" alt="时间复杂度对比" loading="lazy"></p>
 ]]></content>
     </entry>
 </feed>
