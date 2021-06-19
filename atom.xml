@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://imarkofu.github.io</id>
     <title>imarkofu&apos;s blog</title>
-    <updated>2021-06-09T16:19:00.456Z</updated>
+    <updated>2021-06-19T15:46:26.214Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://imarkofu.github.io"/>
     <link rel="self" href="https://imarkofu.github.io/atom.xml"/>
@@ -10,6 +10,66 @@
     <logo>https://imarkofu.github.io/images/avatar.png</logo>
     <icon>https://imarkofu.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, imarkofu&apos;s blog</rights>
+    <entry>
+        <title type="html"><![CDATA[mysql-5.7.34-winx64安装]]></title>
+        <id>https://imarkofu.github.io/post/mysql-5-7-34-winx64-install/</id>
+        <link href="https://imarkofu.github.io/post/mysql-5-7-34-winx64-install/">
+        </link>
+        <updated>2021-06-19T15:17:48.000Z</updated>
+        <summary type="html"><![CDATA[<h2 id="下载">下载</h2>
+<p>官网[ https://dev.mysql.com/downloads/mysql/5.7.html ]下载mysql5.7.34，选择zip；</p>
+]]></summary>
+        <content type="html"><![CDATA[<h2 id="下载">下载</h2>
+<p>官网[ https://dev.mysql.com/downloads/mysql/5.7.html ]下载mysql5.7.34，选择zip；</p>
+<!-- more -->
+<figure data-type="image" tabindex="1"><img src="https://imarkofu.github.io/post-images/1624116256763.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://imarkofu.github.io/post-images/1624116526129.png" alt="" loading="lazy"></figure>
+<h2 id="解压配置">解压配置</h2>
+<ol>
+<li>解压到[C:\Program Files\mysql]目录</li>
+<li>建立data文件夹</li>
+<li>新建my.ini文件<br>
+<img src="https://imarkofu.github.io/post-images/1624116734018.png" alt="" loading="lazy"><br>
+my.ini文件内容如下</li>
+</ol>
+<pre><code class="language-shell">
+[mysql]
+# 设置mysql客户端默认字符集
+default-character-set=utf8
+[mysqld]
+#设置3306端口
+port = 3306
+# 设置mysql的安装目录
+basedir=C:\\Program Files\\mysql\\mysql-5.7.34-winx64
+datadir=C:\\Program Files\\mysql\\mysql-5.7.34-winx64\\data
+# 允许最大连接数
+max_connections=200
+# 服务端使用的字符集默认为8比特编码的latin1字符集
+character-set-server=utf8
+# 创建新表时将使用的默认存储引擎
+default-storage-engine=INNODB
+innodb_flush_method=normal
+ 
+[client]
+#设置3306端口
+port = 3306
+</code></pre>
+<h2 id="安装并初始化">安装并初始化</h2>
+<p>管理员身份打开cmd，进入[C:\Program Files\mysql\mysql-5.7.34-winx64\bin]目录；执行以下指令</p>
+<ol>
+<li>mysqld --install，生成mysql实例，打开服务：<br>
+执行如下命令：net start MySQL<br>
+或到电脑服务列表中找到MySQL服务，并启动<br>
+<img src="https://imarkofu.github.io/post-images/1624117086839.png" alt="" loading="lazy"></li>
+<li>mysqld --initialize --user=mysql --console，此时终端显示随机密码，需要记住，后面会使用到：<br>
+<img src="https://imarkofu.github.io/post-images/1624117374482.png" alt="" loading="lazy"></li>
+<li>修改mysql密码：输入命令行mysql -uroot -p，输入临时密码即可登录数据库成功<pre><code class="language-shell">ALTER USER 'root'@'localhost' IDENTIFIED BY '123456';
+flush privileges;
+</code></pre>
+</li>
+</ol>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Debian 官方源换为国内的源的操作方法]]></title>
         <id>https://imarkofu.github.io/post/debian-switch-source/</id>
@@ -506,109 +566,6 @@ dp[i][j]=A[i][j]+max(dp[i+1][j], dp[i][j+1])，当然这里没有将边界问题
 <li>循环赛日程表</li>
 <li>汉诺塔</li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[算法学些-树、二叉树、二叉搜索树]]></title>
-        <id>https://imarkofu.github.io/post/algorithm-tree/</id>
-        <link href="https://imarkofu.github.io/post/algorithm-tree/">
-        </link>
-        <updated>2019-01-02T15:05:12.000Z</updated>
-        <summary type="html"><![CDATA[<h1 id="树">树</h1>
-<h2 id="定义">定义</h2>
-<p>树(Tree)是元素的集合，每棵树由多个节点（node）组成，用以储存元素。某些节点之间存在着一定的关系，用连线表示，连线称为边（edge）或者链接。边的上端点成为父节点，下端称为子节点。</p>
-]]></summary>
-        <content type="html"><![CDATA[<h1 id="树">树</h1>
-<h2 id="定义">定义</h2>
-<p>树(Tree)是元素的集合，每棵树由多个节点（node）组成，用以储存元素。某些节点之间存在着一定的关系，用连线表示，连线称为边（edge）或者链接。边的上端点成为父节点，下端称为子节点。</p>
-<!-- more -->
-<p><img src="/images/tree01.png" alt="tree" loading="lazy"><br>
-每个节点可以有多个子节点，而该节点则是相应子节点的父节点。但是每个节点只能有一个父节点（只有一个例外，也就是根节点，它没有父节点），如图中第一棵树的 S 节点即为根节点。而没有子节点的节点则称为叶子节点或叶节点，如上图中第一棵树的 A、R、X 节点。E、X 的父节点是一个节点，所以它们被称为兄弟节点。</p>
-<ul>
-<li>树是元素的集合</li>
-<li>该集合可以为空。此时树中没有元素，称之为空树（empty tree）。</li>
-<li>如果该集合不为空，那么该集合至少含有一个根节点以及 0 个或多个子树。根节点与它的子树的根节点用一个边（edge）或链接相连。</li>
-</ul>
-<h2 id="特征">特征</h2>
-<p>高度（Height）、深度（Depth）、层（Level）</p>
-<ul>
-<li>节点的高度 = 节点到叶子结点的最长路径（边数）</li>
-<li>节点的深度 = 根节点到这个节点所经历的边的个数</li>
-<li>节点的层数 = 节点的深度 + 1</li>
-<li>树的高度 = 根节点的高度<br>
-<img src="/images/tree02.png" alt="tree" loading="lazy"></li>
-</ul>
-<h1 id="二叉树">二叉树</h1>
-<h2 id="定义-2">定义</h2>
-<p>二叉树是一种特殊的数据结构，顾名思义，二叉树只有两个叉，也就是两个子节点：左子节点和右子节点。其中，左子节点是左子树的根节点，右子节点是右子树的根节点。当然，这并不是说，二叉树一定要求每个节点都必须有两个子节点，有的节点只有左子节点，而有的节点只有右子节点。</p>
-<h2 id="二叉树的三种遍历方法">二叉树的三种遍历方法</h2>
-<ul>
-<li>前序遍历（也叫先序遍历）：若二叉树为空，则空操作，否则，对于二叉树中的任意节点，先访问这个节点，然后再访问它的左子树，最后打印它的右子树。</li>
-<li>中序遍历：若二叉树为空，则空操作，否则，对于二叉树中的任意节点，先访问它的左子树，然后再访问这个节点本身，最后访问它的右子树。</li>
-<li>后序遍历：若二叉树为空，则空操作，否则，对于二叉树中的任意节点，先访问它的左子树，然后访问它的右子树，最后访问这个节点本身。</li>
-</ul>
-<pre><code class="language-java">    /** 先序递归遍历 */
-    void DLR(BiTree bt) {
-        if (null != bt) {
-            System.out.println(bt.data);
-            DLR(bt.lchild);
-            DLR(bt.rchild);
-        }
-    }
-    /** 中序递归遍历 */
-    void LDR(BiTree bt) {
-        if (null != bt) {
-            LDR(bt.lchild);
-            System.out.println(bt.data);
-            LDR(bt.rchild);
-        }
-    }
-    /** 后序递归遍历 */
-    void LRD(BiTree bt) {
-        if (null != bt) {
-            LRD(bt.lchild);
-            LRD(bt.rchild);
-            System.out.println(bt.data);
-        }
-    }
-</code></pre>
-<h2 id="树与二叉树的区别">树与二叉树的区别</h2>
-<ul>
-<li>二叉树的每个节点最多只能有两个节点，而树则无限制</li>
-<li>二叉树中节点的子树分为左子树和右子树，即使某个节点只有一棵树，也必须要指明这棵树是左子树还是右子树，也就是说，二叉树是有序的</li>
-<li>树不能为空，至少含有一个节点，而一棵二叉树可以为空</li>
-</ul>
-<h1 id="二叉搜索树">二叉搜索树</h1>
-<h2 id="定义-3">定义</h2>
-<p>二叉查找树（Binary Search Tree，BST）是一种特殊的二叉树，一棵二叉搜索树（BST）是一棵二叉树，其中，每个节点的值都要大于其左子树中任意节点的值而小于右子树中任意节点的值。</p>
-<h2 id="特征-2">特征</h2>
-<ul>
-<li>若它的左子树不为空，那么左子树上所有节点的key都小于根节点的key。</li>
-<li>若它的右子树不为空，那么右子树上所有节点的key都大于根节点的key。</li>
-<li>它的左右子树也分别为二叉排序树。</li>
-</ul>
-<h2 id="查找">查找</h2>
-<ul>
-<li>如果二叉查找树为空，则返回空操作，否则，执行一下操作；</li>
-<li>先取根节点，如果节点 X 等于根节点，则返回；</li>
-<li>如果节点小于根节点，则递归查找左子树；</li>
-<li>如果节点大于根节点，则递归查找右子树。</li>
-</ul>
-<h2 id="插入">插入</h2>
-<ul>
-<li>如果树是空的，则直接将新节点插入，否则，执行下面步骤。</li>
-<li>要插入的数据比根节点数据大，则到右子树中插入新数据，如果右子树为空，则将新数据直接插入到右子节点的位置；不为空，则继续遍历右子树，查找插入位置。</li>
-<li>要插入的数据比根节点数据小，则到左子树中插入数据，如果左子树为空，则直接将新数据插入到左子节点的位置；不为空，则继续遍历左子树，查找插入的位置。</li>
-</ul>
-<h2 id="删除">删除</h2>
-<ul>
-<li>第一种情况，如果要删除的节点没有子节点，直接将父节点指向要删除节点的指针指向 null。比如途中要删除的节点 55。</li>
-<li>第二种情况，如果要删除的节点只有一个节点，即只有左子节点或右子节点，则将父节点指向要删除节点的指针指向要删除节点的子节点即可。比如途中要删除的节点</li>
-<li>第三种情况，如果要删除的节点有两个子节点，则需要先找到这个节点右子树中的最小节点或者左子树中的最大节点，将其替换到要删除的节点上。然后删除这个右子树中的最小节点或左子树中的最大节点，这样就可以利用<br>
-1、2 两条规则来删除了。</li>
-</ul>
-<h2 id="查找最大-最小节点">查找最大、最小节点</h2>
-<p>查找最大、最小节点比较简单，比如要查找二叉查找树的最大节点时，如果二叉查找树为空，则返回空操作，如果不为空，则判断是否只有一个节点（即只有根节点），如果是则返回根节点，否则到右子树中递归查找。同理，查找最小节点类似，只是到左子树中查找而已。</p>
 ]]></content>
     </entry>
 </feed>
